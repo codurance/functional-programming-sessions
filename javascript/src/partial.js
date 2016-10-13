@@ -19,18 +19,17 @@ module.exports = {
   // def CurryAny (f: A => B => C => ... => D): A => (B => C => ... => D)
   // The implementation is different than currying as it not specified how many parameters the original function had, therefore it is necessary to invoke it one more time (in this implementation) to indicate that there are no more parameters
   curryAny(function_) {
-    const params = [];
-    const funct = function_;
-    const curryAny2 = function (a) {
-      if (a) {
-        params.push(a);
-        return curryAny2;
-      } else {
-        return funct.apply(null, params);
-      }
+    const go = (params, function_) => {
+      return function (a) {
+        if (a) {
+          params.push(a);
+          return go(params, function_);
+        } else {
+          return function_.apply(null, params);
+        }
+      };
     };
-
-    return curryAny2;
+    return go([], function_);
   },
   // def curryAnyWithParameterNumber (n: Int, f: A => B => C => ... => D): A => (B => C => ... => D)
   // The implementation is different than currying as it is specified how many parameters the original function had, but the use of the curried function is the same
