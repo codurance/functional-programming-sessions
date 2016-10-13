@@ -60,7 +60,7 @@ main = hspec $ do
             apply' [1..3] `shouldBe` (Cons 1 $ Cons 2 $ Cons 3 Nil)
 
     describe "setHead" $ do
-        it (printf "should create our type of list from a list") $
+        it (printf "should set the head with a new element") $
             setHead' 3 (apply' [1,2,3]) `shouldBe` (Cons 3 $ Cons 2 $ Cons 3 Nil)
 
     describe "drop'" $ do
