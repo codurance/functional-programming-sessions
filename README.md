@@ -1,4 +1,4 @@
-# functional programming sessions
+# Functional Programming Sessions
 
 Our work on the book [Functional Programming in Scala][book], by Chiusano and Bjarnason.
 
