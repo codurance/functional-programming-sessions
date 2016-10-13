@@ -13,3 +13,15 @@ describe ('Exercise 3', () => {
   });
 });
 
+describe ('Exercise 4', () => {
+  it('to curry a function', () => {
+    const two = (a,b) => a+b;
+    expect(two(1,2)).to.equal(3);
+
+    const curriedTwo = modul.curry(two);
+    expect(typeof(curriedTwo)).to.equal('function');
+    expect(typeof(curriedTwo(1))).to.equal('function');
+    expect(curriedTwo(1)(2)).to.equal(3);
+  });
+});
+
