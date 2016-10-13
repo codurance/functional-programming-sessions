@@ -31,5 +31,22 @@ module.exports = {
     };
 
     return curryAny2;
+  },
+  // def curryAnyWithParameterNumber (n: Int, f: A => B => C => ... => D): A => (B => C => ... => D)
+  // The implementation is different than currying as it is specified how many parameters the original function had, but the use of the curried function is the same
+  curryAnyWithParameterNumber(numberOfParams, function_) {
+    const params = [];
+    const funct = function_;
+    const curryAny2 = function (a) {
+      params.push(a);
+      if (params.length === numberOfParams) {
+        return funct.apply(null, params);
+      } else {
+        return curryAny2;
+      }
+    };
+
+    return curryAny2;
   }
+
 };
