@@ -14,7 +14,7 @@ describe ('Exercise 3', () => {
 });
 
 describe ('Exercise 4', () => {
-  it('to curry a function', () => {
+  it('to curry a function with two parameters', () => {
     const two = (a,b) => a+b;
     expect(two(1,2)).to.equal(3);
 
@@ -22,6 +22,25 @@ describe ('Exercise 4', () => {
     expect(typeof(curriedTwo)).to.equal('function');
     expect(typeof(curriedTwo(1))).to.equal('function');
     expect(curriedTwo(1)(2)).to.equal(3);
+  });
+
+  describe('to curry a function with any number of parameters', () => {
+    const three = (a,b,c) => a+b+c;
+    let curriedThree = null;
+    beforeEach(()=>{
+      curriedThree = modul.curryAny(three);
+    });
+
+    it('always a function before invoking for the last time', ()=> {
+      expect(typeof(curriedThree)).to.equal('function');
+      expect(typeof(curriedThree(1))).to.equal('function');
+      expect(typeof(curriedThree(1)(2))).to.equal('function');
+      expect(typeof(curriedThree(1)(2)(3))).to.equal('function');
+    });
+
+    it('applies the function when invoked without parameters', ()=>{
+      expect(curriedThree(1)(2)(3)()).to.equal(6);
+    });
   });
 });
 
