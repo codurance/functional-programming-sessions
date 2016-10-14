@@ -77,3 +77,10 @@ main = hspec $ do
 
         it "should loop over the elements from the right" $
             foldr (\ele acc -> acc - ele) 0 (apply' [1,2,3]) `shouldBe` -6
+
+    describe "foldl" $ do
+        it "should return the default element on the empty list" $
+            foldl (-) 0 (apply' []) `shouldBe` 0
+
+        it "should loop over the elements from the right" $
+            foldl (\ele acc -> acc + ele) 0 (apply' [1,2,3]) `shouldBe` 6
