@@ -125,3 +125,8 @@ main = hspec $ do
             ((last' $ apply' [1,2,3]) `shouldBe` 3)
             ((last' $ apply' [3]) `shouldBe` 3)
 
+    describe "appendEnd" $ do
+        it "appends a single element to a List', at the end" $ do
+            ((appendEnd (apply' [1,2]) 3) `shouldBe` apply' [1,2,3])
+            ((appendEnd (apply' [1]) 2) `shouldBe` apply' [1,2])
+
