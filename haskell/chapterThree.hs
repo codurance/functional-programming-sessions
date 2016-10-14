@@ -119,3 +119,9 @@ main = hspec $ do
         
         it "cumulates the result of executing the function, from the left" $
             (scanl'' (+) 1 $  apply' [1,2,3]) `shouldBe`  apply' [1,2,4,7]
+
+    describe "last'" $ do
+        it "retrieves the last element from a List'" $ do
+            ((last' $ apply' [1,2,3]) `shouldBe` 3)
+            ((last' $ apply' [3]) `shouldBe` 3)
+
