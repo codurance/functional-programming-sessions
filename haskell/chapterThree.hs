@@ -57,7 +57,7 @@ appendEnd Nil y = (Cons y Nil)
 appendEnd (Cons x xs) y = Cons x $ appendEnd xs y
 
 scanl'' :: (a -> b -> b) -> b -> List' a -> List' b
-scanl'' f init xs =  scanl''' (Cons init Nil) f xs  where
+scanl'' f init =  scanl''' (Cons init Nil) f  where
     scanl''' current f Nil = current
     scanl''' current f (Cons x xs) = scanl''' accumulated f xs where
         accumulated = current `appendEnd` (f x (last' current))
