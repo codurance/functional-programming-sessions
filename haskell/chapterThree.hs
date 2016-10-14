@@ -47,6 +47,17 @@ scanr' _ acc Nil = (Cons acc Nil)
 scanr' f acc (Cons x xs) = Cons (f x (head' x')) x'
     where x' = scanr' f acc xs
 
+scanl'' :: (a -> b -> b) -> b -> [a] -> [b]
+scanl'' f init xs =  scanl''' [init] f xs  where
+    scanl''' current f [] = current
+    scanl''' current f (x : xs) = scanl''' x' f xs where
+        x' = current ++ [(f x (last current))]
+
+--scanl'' =  scanl''' Nil where
+--    scanl''' current f acc Nil = current
+--    scanl''' current f acc (Cons x xs) = scanl''' (current ++ (f x acc)) acc xs
+
+
 main = hspec $ do
     describe "head" $ do
         it (printf "should return first element of list") $
@@ -96,3 +107,10 @@ main = hspec $ do
 
         it "cumulates the results of executing the function" $
             (scanr' (-) 0 $ apply' [1,2,3]) `shouldBe` apply' [2,-1,3,0]
+
+    describe "scanl" $ do
+        it "with an empty, it is just the initial value" $
+            (scanl'' (+) 1 $  []) `shouldBe`  [1]
+        
+        it "cumulates the result of executing the function, from the left" $
+            (scanl'' (+) 1 $  [1,2,3]) `shouldBe`  [1,2,4,7]
