@@ -42,6 +42,10 @@ drop' 0 xs = xs
 --drop' n xs = tail' (drop' (n-1) xs)
 drop' n (Cons x xs) = drop' (n - 1) xs
 
+scanr' _ acc Nil = (Cons acc Nil)
+scanr' f acc (Cons x xs) = Cons (f x (head' x')) x'
+    where x' = scanr' f acc xs
+
 main = hspec $ do
     describe "head" $ do
         it (printf "should return first element of list") $
@@ -84,3 +88,10 @@ main = hspec $ do
 
         it "should loop over the elements from the right" $
             foldl (\ele acc -> acc + ele) 0 (apply' [1,2,3]) `shouldBe` 6
+
+    describe "scanr" $ do
+        it "cumulates the results of executing the function" $
+            (scanr' (-) 0 $ apply' []) `shouldBe` apply' [0]
+
+        it "cumulates the results of executing the function" $
+            (scanr' (-) 0 $ apply' [1,2,3]) `shouldBe` apply' [2,-1,3,0]
