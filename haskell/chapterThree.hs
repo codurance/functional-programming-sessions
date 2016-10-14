@@ -44,8 +44,8 @@ drop' n (Cons x xs) = drop' (n - 1) xs
 
 scanr' :: (a -> b -> b) -> b -> List' a -> List' b
 scanr' _ acc Nil = (Cons acc Nil)
-scanr' f acc (Cons x xs) = Cons (f x (head' x')) x'
-    where x' = scanr' f acc xs
+scanr' f acc (Cons x xs) = Cons (f x (head' accumulated)) accumulated
+    where accumulated = scanr' f acc xs
 
 last' :: List' a -> a
 last' Nil = error "last of nothing???"
