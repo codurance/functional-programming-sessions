@@ -57,10 +57,11 @@ appendEnd Nil y = (Cons y Nil)
 appendEnd (Cons x xs) y = Cons x $ appendEnd xs y
 
 scanl'' :: (a -> b -> b) -> b -> List' a -> List' b
-scanl'' f init xs =  scanl''' (Cons init Nil) f xs  where
-    scanl''' current f Nil = current
-    scanl''' current f (Cons x xs) = scanl''' accumulated f xs where
-        accumulated = current `appendEnd` (f x (last' current))
+scanl'' f init xs =  scanl''' init (Cons init Nil) f xs  where
+    scanl''' _ current f Nil = current
+    scanl''' acc current f (Cons x xs) = scanl''' acc' accumulated f xs where
+        accumulated = current `appendEnd` acc'
+        acc' = (f x acc)
 
 main = hspec $ do
     describe "head" $ do
