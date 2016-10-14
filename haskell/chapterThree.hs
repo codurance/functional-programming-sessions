@@ -62,11 +62,6 @@ scanl'' f init xs =  scanl''' (Cons init Nil) f xs  where
     scanl''' current f (Cons x xs) = scanl''' x' f xs where
         x' = current `appendEnd` (f x (last' current))
 
---scanl'' =  scanl''' Nil where
---    scanl''' current f acc Nil = current
---    scanl''' current f acc (Cons x xs) = scanl''' (current ++ (f x acc)) acc xs
-
-
 main = hspec $ do
     describe "head" $ do
         it (printf "should return first element of list") $
