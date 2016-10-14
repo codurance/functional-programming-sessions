@@ -47,11 +47,20 @@ scanr' _ acc Nil = (Cons acc Nil)
 scanr' f acc (Cons x xs) = Cons (f x (head' x')) x'
     where x' = scanr' f acc xs
 
-scanl'' :: (a -> b -> b) -> b -> [a] -> [b]
-scanl'' f init xs =  scanl''' [init] f xs  where
-    scanl''' current f [] = current
-    scanl''' current f (x : xs) = scanl''' x' f xs where
-        x' = current ++ [(f x (last current))]
+last' :: List' a -> a
+last' Nil = error "last of nothing???"
+last' (Cons x Nil) = x
+last' (Cons x xs) = last' xs
+
+appendEnd :: List' a -> a -> List' a
+appendEnd Nil y = (Cons y Nil)
+appendEnd (Cons x xs) y = Cons x $ appendEnd xs y
+
+scanl'' :: (a -> b -> b) -> b -> List' a -> List' b
+scanl'' f init xs =  scanl''' (Cons init Nil) f xs  where
+    scanl''' current f Nil = current
+    scanl''' current f (Cons x xs) = scanl''' x' f xs where
+        x' = current `appendEnd` (f x (last' current))
 
 --scanl'' =  scanl''' Nil where
 --    scanl''' current f acc Nil = current
@@ -110,7 +119,7 @@ main = hspec $ do
 
     describe "scanl" $ do
         it "with an empty, it is just the initial value" $
-            (scanl'' (+) 1 $  []) `shouldBe`  [1]
+            (scanl'' (+) 1 $  apply' []) `shouldBe`  apply' [1]
         
         it "cumulates the result of executing the function, from the left" $
-            (scanl'' (+) 1 $  [1,2,3]) `shouldBe`  [1,2,4,7]
+            (scanl'' (+) 1 $  apply' [1,2,3]) `shouldBe`  apply' [1,2,4,7]
