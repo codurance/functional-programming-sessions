@@ -42,6 +42,7 @@ drop' 0 xs = xs
 --drop' n xs = tail' (drop' (n-1) xs)
 drop' n (Cons x xs) = drop' (n - 1) xs
 
+scanr' :: (a -> b -> b) -> b -> List' a -> List' b
 scanr' _ acc Nil = (Cons acc Nil)
 scanr' f acc (Cons x xs) = Cons (f x (head' x')) x'
     where x' = scanr' f acc xs
