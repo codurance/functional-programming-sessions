@@ -8,6 +8,10 @@ import Data.List
 data List' a = Nil
              | Cons a (List' a) deriving (Show, Eq)
 
+instance Foldable List' where
+    foldr function accumulator Nil = accumulator 
+    foldr function accumulator (Cons x xs) = function x (foldr function accumulator xs)
+
 head' :: List' a -> a
 head' Nil = error "head of nothing???"
 head' (Cons a _) = a
@@ -66,3 +70,10 @@ main = hspec $ do
     describe "drop'" $ do
         it ("should remove the first n element of our list") $
             drop' 2 (apply' [1..5]) `shouldBe` (Cons 3 $ Cons 4 $ Cons 5 Nil)
+
+    describe "foldr" $ do
+        it "should return the default element on the empty list" $
+            foldr (-) 0 (apply' []) `shouldBe` 0
+
+        it "should loop over the elements from the right" $
+            foldr (\ele acc -> acc - ele) 0 (apply' [1,2,3]) `shouldBe` -6
