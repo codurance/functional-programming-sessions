@@ -75,4 +75,16 @@ class ListTest extends FlatSpec with Matchers {
     "Set head of a list" should "replace the head of the list" in {
         setHead(List(1, 2))(3) should be(List(3, 2))
     }
+
+    "Initialising an empty list" should "return an empty list" in {
+        init(List()) should be(List())
+    }
+
+    "Initialising a list with one element" should "return an empty list" in {
+        init(List(1)) should be(List())
+    }
+
+    "Initialising a list" should "return the list without the last element" in {
+        init(List(1, 2, 3, 4)) should be(List(1, 2, 3))
+    }
 }
