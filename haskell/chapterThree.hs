@@ -28,6 +28,9 @@ product' :: List' Int -> Int
 product' Nil = 1
 product' (Cons x xs) = x * product' xs
 
+product'' :: List' Int -> Int
+product'' xs = foldl' (*) 1 xs
+
 apply' :: [a] -> List' a
 apply' [] = Nil
 apply' (x:xs) = Cons x $ apply' xs
@@ -77,8 +80,9 @@ main = hspec $ do
             sum' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 9
 
     describe "product" $ do
-        it "should multiply a list" $
-            product' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 24
+        it "should multiply a list" $ do
+            (product' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 24)
+            ((product'' $ apply' [4,3,2]) `shouldBe` 24)
 
     describe "apply" $ do
         it "should create our type of list from a list" $
