@@ -73,6 +73,11 @@ map' :: (a -> b) -> List' a -> List' b
 map' _ Nil = Nil
 map' f (Cons x xs) = Cons (f x) (map' f xs)
 
+map'' :: (a -> b) -> List' a -> List' b
+map'' = map' Nil
+    where map' accumulated f Nil = accumulated
+          map' accumulated f (Cons x xs) = map' (accumulated `appendEnd` f x) f xs
+
 main = hspec $ do
     describe "head" $ do
         it "should return first element of list" $
@@ -144,4 +149,6 @@ main = hspec $ do
         it "applies the function to every element, keeping the order" $ do
             ((map' id (apply' [1,2])) `shouldBe` apply' [1,2])
             ((map' id (apply' [1])) `shouldBe` apply' [1])
+            ((map'' id (apply' [1,2])) `shouldBe` apply' [1,2])
+            ((map'' id (apply' [1])) `shouldBe` apply' [1])
 
