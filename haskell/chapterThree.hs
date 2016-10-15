@@ -24,6 +24,9 @@ sum' :: List' Int -> Int
 sum' Nil = 0
 sum' (Cons x xs) = x + sum' xs
 
+sum'' :: List' Int -> Int
+sum'' = foldl' (+) 0 
+
 product' :: List' Int -> Int
 product' Nil = 1
 product' (Cons x xs) = x * product' xs
@@ -76,8 +79,9 @@ main = hspec $ do
             tail' (Cons 4 (Nil)) `shouldBe` Nil
 
     describe "sum" $ do
-        it "should sum a list" $
-            sum' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 9
+        it "should sum a list" $ do
+            (sum' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 9)
+            ((sum'' $ apply' [4,3,2]) `shouldBe` 9)
 
     describe "product" $ do
         it "should multiply a list" $ do
