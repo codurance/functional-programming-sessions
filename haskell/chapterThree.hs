@@ -107,11 +107,9 @@ main = hspec $ do
             foldl (\ele acc -> acc + ele) 0 (apply' [1,2,3]) `shouldBe` 6
 
     describe "scanr" $ do
-        it "cumulates the results of executing the function" $
-            (scanr' (-) 0 $ apply' []) `shouldBe` apply' [0]
-
-        it "cumulates the results of executing the function" $
-            (scanr' (-) 0 $ apply' [1,2,3]) `shouldBe` apply' [2,-1,3,0]
+        it "cumulates the results of executing the function" $ do
+            ((scanr' (-) 0 $ apply' []) `shouldBe` apply' [0])
+            ((scanr' (-) 0 $ apply' [1,2,3]) `shouldBe` apply' [2,-1,3,0])
 
     describe "scanl" $ do
         it "with an empty, it is just the initial value" $
