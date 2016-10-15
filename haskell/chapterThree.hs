@@ -69,6 +69,10 @@ scanl'' f init xs =  scanl''' init (Cons init Nil) f xs  where
         accumulated = current `appendEnd` acc'
         acc' = (f x acc)
 
+map' :: (a -> b) -> List' a -> List' b
+map' _ Nil = Nil
+map' f (Cons x xs) = Cons (f x) (map' f xs)
+
 main = hspec $ do
     describe "head" $ do
         it "should return first element of list" $
@@ -135,4 +139,9 @@ main = hspec $ do
         it "appends a single element to a List', at the end" $ do
             ((appendEnd (apply' [1,2]) 3) `shouldBe` apply' [1,2,3])
             ((appendEnd (apply' [1]) 2) `shouldBe` apply' [1,2])
+
+    describe "map'" $ do
+        it "applies the function to every element, keeping the order" $ do
+            ((map' id (apply' [1,2])) `shouldBe` apply' [1,2])
+            ((map' id (apply' [1])) `shouldBe` apply' [1])
 
