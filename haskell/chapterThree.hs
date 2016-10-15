@@ -65,31 +65,31 @@ scanl'' f init xs =  scanl''' init (Cons init Nil) f xs  where
 
 main = hspec $ do
     describe "head" $ do
-        it (printf "should return first element of list") $
+        it "should return first element of list" $
             head' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 4
 
     describe "tail" $ do
-        it (printf "should return tail of a list") $
+        it "should return tail of a list" $
             tail' (Cons 4 (Nil)) `shouldBe` Nil
 
     describe "sum" $ do
-        it (printf "should sum a list") $
+        it "should sum a list" $
             sum' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 9
 
     describe "product" $ do
-        it (printf "should multiply a list") $
+        it "should multiply a list" $
             product' (Cons 4 (Cons 3 (Cons 2 (Nil)))) `shouldBe` 24
 
     describe "apply" $ do
-        it (printf "should create our type of list from a list") $
+        it "should create our type of list from a list" $
             apply' [1..3] `shouldBe` (Cons 1 $ Cons 2 $ Cons 3 Nil)
 
     describe "setHead" $ do
-        it (printf "should set the head of a list with a new value") $
+        it "should set the head of a list with a new value" $
             setHead' 3 (apply' [1,2,3]) `shouldBe` (Cons 3 $ Cons 2 $ Cons 3 Nil)
 
     describe "drop'" $ do
-        it ("should remove the first n element of our list") $
+        it "should remove the first n element of our list" $
             drop' 2 (apply' [1..5]) `shouldBe` (Cons 3 $ Cons 4 $ Cons 5 Nil)
 
     describe "foldr" $ do
