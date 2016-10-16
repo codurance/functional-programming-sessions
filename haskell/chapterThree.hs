@@ -95,6 +95,11 @@ flatMap' xs f = foldl (\acc x -> (acc `concat'` f x)) Nil xs
 concat' :: List' a -> List' a -> List' a
 concat' Nil new = new
 concat' (Cons x xs) new = Cons x (concat' xs new)
+
+sumTwoLists' :: Num a => List' a -> List' a -> List' a
+sumTwoLists' x Nil = x
+sumTwoLists' Nil x = x
+sumTwoLists' (Cons x xs) (Cons y ys) = (Cons (x + y) (sumTwoLists' xs ys))
     
 
 main = hspec $ do
@@ -205,3 +210,13 @@ main = hspec $ do
             (flatMap' (apply' [1,2,3]) rep) `shouldBe` apply' [1,1,2,2,3,3];
             (flatMap' (apply' [1,2,3]) (rep' 3)) `shouldBe` apply' [1,1,1,2,2,2,3,3,3];
 
+    describe "sumTwoLists - accepts two lists and sums its elements" $ do
+        it "empty list" $ do
+            length' (sumTwoLists' Nil Nil) `shouldBe` 0;
+
+        it "one empty list and the other non-empty" $ do
+            (sumTwoLists' (apply' [1,2,3]) Nil) `shouldBe` apply' [1,2,3];
+            (sumTwoLists' Nil (apply' [1,2,3])) `shouldBe` apply' [1,2,3];
+
+        it "both non-empty lists" $ do
+            (sumTwoLists' (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [2,4..6];
