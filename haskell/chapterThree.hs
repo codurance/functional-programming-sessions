@@ -104,7 +104,7 @@ processTwoLists' _ _ Nil = Nil
 processTwoLists' _ Nil _ = Nil
 processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
 
-processTwoListsWithDefault' :: (a -> a -> b) -> a -> a -> List' a -> List' a -> List' b
+processTwoListsWithDefault' :: (a -> b -> c) -> a -> b -> List' a -> List' b -> List' c
 processTwoListsWithDefault' f dL dR Nil Nil = Nil
 processTwoListsWithDefault' f dL dR (Cons x xs) Nil = Cons (f x dR) (processTwoListsWithDefault' f dL dR xs Nil)
 processTwoListsWithDefault' f dL dR Nil (Cons x xs) = Cons (f dL x) (processTwoListsWithDefault' f dL dR Nil xs)
