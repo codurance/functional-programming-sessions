@@ -100,6 +100,11 @@ sumTwoLists' :: Num a => List' a -> List' a -> List' a
 sumTwoLists' x Nil = x
 sumTwoLists' Nil x = x
 sumTwoLists' (Cons x xs) (Cons y ys) = (Cons (x + y) (sumTwoLists' xs ys))
+
+processTwoLists' :: (a -> a -> b) -> List' a -> List' a -> List' b
+processTwoLists' _ _ Nil = Nil
+processTwoLists' _ Nil _ = Nil
+processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
     
 
 main = hspec $ do
@@ -223,3 +228,19 @@ main = hspec $ do
         
         it "both infinite lists" $ do
             (take' 10 (sumTwoLists' (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
+
+    describe "processTwoLists - accepts two lists and applies a function to its elements" $ do
+        it "empty list" $ do
+            length' (processTwoLists' (+) Nil Nil) `shouldBe` 0;
+
+        it "one empty list and the other non-empty" $ do
+            (processTwoLists' (+) (apply' [1,2,3]) Nil) `shouldBe` Nil;
+            (processTwoLists' (+) Nil (apply' [1,2,3])) `shouldBe` Nil;
+
+        it "both non-empty lists" $ do
+            (processTwoLists' (+) (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [2,4..6];
+        
+        it "both infinite lists" $ do
+            (take' 10 (processTwoLists' (+) (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
+
+
