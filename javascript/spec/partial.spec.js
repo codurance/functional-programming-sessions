@@ -80,6 +80,10 @@ describe ('Exercise 4', () => {
       it('applies the function when invoked with the specified parameters', ()=>{
         expect(curriedThree(1)(2)(3)).to.equal(6);
       });
+
+      it('also applies the function to any number of parameters', ()=>{
+        expect(curriedThree(1, 2, 3)).to.equal(6);
+      });
     });
   });
 });

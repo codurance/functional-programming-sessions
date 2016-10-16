@@ -34,13 +34,15 @@ module.exports = {
   // def curryAnyWithParameterNumber (n: Int, f: A => B => C => ... => D): A => (B => C => ... => D)
   // The implementation is different than currying as it is specified how many parameters the original function had, but the use of the curried function is the same
   curryAnyWithParameterNumber(numberOfParams, function_) {
+    const self = this;
     const go = (remainingParams, params, function_) => {
       if (remainingParams === 0) {
         return function_.apply(null, params);
       } else {
-        return function (a) {
-          params.push(a);
-          return go(remainingParams - 1, params, function_);
+        return function ( /* arguments */ ) {
+          const args = self.toArray(arguments);
+          args.forEach(x => params.push(x));
+          return go(remainingParams - args.length, params, function_);
         };
       }
     };
@@ -51,6 +53,9 @@ module.exports = {
   autocurry(function_) {
     const numberOfParams = function_.length;
     return this.curryAnyWithParameterNumber(numberOfParams, function_);
-  }
+  },
 
+  toArray(args) {
+    return [...args];
+  }
 };
