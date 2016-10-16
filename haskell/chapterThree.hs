@@ -248,3 +248,24 @@ main = hspec $ do
             (take' 10 (processTwoLists' (-) (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' $ repeat 0);
 
 
+    describe "processTwoListsWithDefault - like `processTwoLists` but keeps applying the provided default values when the original list is over" $ do
+        it "empty list" $ do
+            length' (processTwoListsWithDefault' (-) 0 0 Nil Nil) `shouldBe` 0;
+
+        it "one empty list and the other non-empty" $ do
+            (processTwoListsWithDefault' (-) 0 0 (apply' [1,2,3]) Nil) `shouldBe` apply' [1,2,3];
+            (processTwoListsWithDefault' (-) 0 0 Nil (apply' [1,2,3])) `shouldBe` apply' [-1,-2,-3];
+        
+        it "testing the default value on the left" $ do
+            (processTwoListsWithDefault' (-) 1 0 Nil (apply' [1,2,3])) `shouldBe` apply' [0,-1,-2];
+
+        it "testing the default value on the right" $ do
+            (processTwoListsWithDefault' (-) 0 1 (apply' [1,2,3]) Nil) `shouldBe` apply' [0,1,2];
+
+        it "both non-empty lists" $ do
+            (processTwoListsWithDefault' (-) 0 0 (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [0,0,0];
+        
+        it "both infinite lists" $ do
+            (take' 10 (processTwoListsWithDefault' (-) 0 0 (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [0,0..]);
+
+
