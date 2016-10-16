@@ -45,6 +45,12 @@ module.exports = {
       }
     };
     return go(numberOfParams , [], function_);
+  },
+
+  // def autocurry ( f: (A => B => ... => D): A => (B => ... => D)
+  autocurry(function_) {
+    const numberOfParams = function_.length;
+    return this.curryAnyWithParameterNumber(numberOfParams, function_);
   }
 
 };

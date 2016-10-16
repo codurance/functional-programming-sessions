@@ -62,6 +62,25 @@ describe ('Exercise 4', () => {
         expect(curriedThree(1)(2)(3)).to.equal(6);
       });
     });
+
+    describe('autocurry: no need to specify the number of parameters in the currying function', () =>{
+      beforeEach(()=>{
+        curriedThree = modul.autocurry(three);
+      });
+
+      it('always a function before invoking for the last time', ()=> {
+        expect(typeof(curriedThree)).to.equal('function');
+        expect(typeof(curriedThree(1))).to.equal('function');
+      });
+
+      it('always a function before invoking for the last time', ()=> {
+        expect(typeof(curriedThree(1)(2))).to.equal('function');
+      });
+
+      it('applies the function when invoked with the specified parameters', ()=>{
+        expect(curriedThree(1)(2)(3)).to.equal(6);
+      });
+    });
   });
 });
 
