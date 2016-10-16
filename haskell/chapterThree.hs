@@ -78,6 +78,13 @@ map'' = map' Nil
     where map' accumulated f Nil = accumulated
           map' accumulated f (Cons x xs) = map' (accumulated `appendEnd` f x) f xs
 
+filter' :: (a -> Bool) -> List' a -> List' a
+filter'  = filter'' Nil where
+    filter'' accumulated _ Nil = accumulated
+    filter'' accumulated f (Cons x xs) = filter'' next f xs where
+         next = if (f x) then (accumulated `appendEnd` x) else accumulated 
+    
+
 main = hspec $ do
     describe "head" $ do
         it "should return first element of list" $
@@ -151,4 +158,9 @@ main = hspec $ do
             ((map' id (apply' [1])) `shouldBe` apply' [1])
             ((map'' id (apply' [1,2])) `shouldBe` apply' [1,2])
             ((map'' id (apply' [1])) `shouldBe` apply' [1])
+
+    describe "filter'" $ do
+        it "keeps the elements which satisfy the predicate" $ do
+            ((filter' odd (apply' [1,2,3,4,5])) `shouldBe` apply' [1,3,5])
+            ((filter' odd (apply' [])) `shouldBe` apply' [])
 
