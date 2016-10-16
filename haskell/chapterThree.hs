@@ -101,9 +101,12 @@ sumTwoLists' :: Num a => List' a -> List' a -> List' a
 sumTwoLists' = processTwoListsWithDefault' (+) 0 0
 
 processTwoLists' :: (a -> b -> c) -> List' a -> List' b -> List' c
-processTwoLists' _ _ Nil = Nil
-processTwoLists' _ Nil _ = Nil
-processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
+processTwoLists' f xs ys = map' (\(a,b) -> f a b) $ zip' xs ys
+
+zip' :: List' a -> List' b -> List' (a, b)
+zip' _ Nil = Nil
+zip' Nil _ = Nil
+zip' (Cons x xs) (Cons y ys) = Cons (x, y) (zip' xs ys)
 
 processTwoListsWithDefault' :: (a -> b -> c) -> a -> b -> List' a -> List' b -> List' c
 processTwoListsWithDefault' f dL dR xs ys = map' f' (zipExtends' xs ys) where
