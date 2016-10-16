@@ -3,6 +3,7 @@ module ChapterThree where
 import Test.Hspec
 import Text.Printf (printf)
 import Data.List
+import Data.Maybe
 
 
 data List' a = Nil
@@ -106,9 +107,8 @@ processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs
 
 processTwoListsWithDefault' :: (a -> b -> c) -> a -> b -> List' a -> List' b -> List' c
 processTwoListsWithDefault' f dL dR xs ys = map' f' (zip' xs ys) where
-    ifNil (Just x) d = x
-    ifNil Nothing d = d
-    f' = \(x, y) -> f (ifNil x dL) (ifNil y dR)
+    orDefault maybe default_ = fromMaybe default_ maybe
+    f' = \(x, y) -> f (orDefault x dL) (orDefault y dR)
 
 zip' :: List' a -> List' b -> List' (Maybe a, Maybe b)
 zip' Nil Nil = Nil
