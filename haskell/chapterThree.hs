@@ -90,6 +90,15 @@ take' :: Int -> List' a -> List' a
 take' 0 _ = Nil
 take' _ Nil = Nil
 take' n (Cons x xs) = Cons x (take' (n - 1) xs)
+
+flatMap' :: List' a -> (a -> List' b) -> List' b
+flatMap' = flatMap'' Nil
+    where flatMap'' accumulated Nil f = accumulated
+          flatMap'' accumulated (Cons x xs) f = flatMap'' (accumulated `concat'` f x) xs f
+
+concat' :: List' a -> List' a -> List' a
+concat' Nil new = new
+concat' (Cons x xs) new = Cons x (concat' xs new)
     
 
 main = hspec $ do
@@ -186,3 +195,17 @@ main = hspec $ do
         it "from an infinite list" $ do
             ((take' 2 $ apply' [1..]) `shouldBe` apply' [1,2])
             ((take' 0 $ apply' [1..]) `shouldBe` apply' [])
+
+    describe "flatMap - flattens a list of lists into a list" $ do
+        let rep x = Cons x (Cons x Nil);
+        let rep' n = (apply' . replicate n)
+        -- equivalent to
+        -- let rep = apply' . replicate 2
+
+        it "empty list" $ do
+            length' (flatMap' Nil rep) `shouldBe` 0;
+
+        it " list" $ do
+            (flatMap' (apply' [1,2,3]) rep) `shouldBe` apply' [1,1,2,2,3,3];
+            (flatMap' (apply' [1,2,3]) (rep' 3)) `shouldBe` apply' [1,1,1,2,2,2,3,3,3];
+
