@@ -58,6 +58,14 @@ describe ('Exercise 4', () => {
         expect(typeof(curriedThree(1)(2))).to.equal('function');
       });
 
+      it('also can be invoked in non-curried fashion, returning a function', ()=> {
+        expect(typeof(curriedThree(1, 2))).to.equal('function');
+      });
+
+      it('also can be invoked in non-curried fashion, applying the function', ()=> {
+        expect(curriedThree(1, 2, 3)).to.equal(6);
+      });
+
       it('applies the function when invoked with the specified parameters', ()=>{
         expect(curriedThree(1)(2)(3)).to.equal(6);
       });
