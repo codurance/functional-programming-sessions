@@ -233,7 +233,7 @@ main = hspec $ do
         it "empty list" $ do
             length' (processTwoLists' (+) Nil Nil) `shouldBe` 0;
 
-        it "one empty list and the other non-empty" $ do
+        it "one empty list and the other non-empty. The resulting list is as long as the shortest of the two arguments" $ do
             (processTwoLists' (+) (apply' [1,2,3]) Nil) `shouldBe` Nil;
             (processTwoLists' (+) Nil (apply' [1,2,3])) `shouldBe` Nil;
 
