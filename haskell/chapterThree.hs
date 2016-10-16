@@ -220,3 +220,6 @@ main = hspec $ do
 
         it "both non-empty lists" $ do
             (sumTwoLists' (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [2,4..6];
+        
+        it "both infinite lists" $ do
+            (take' 10 (sumTwoLists' (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
