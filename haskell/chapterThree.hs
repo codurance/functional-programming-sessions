@@ -99,7 +99,7 @@ concat' (Cons x xs) new = Cons x (concat' xs new)
 sumTwoLists' :: Num a => List' a -> List' a -> List' a
 sumTwoLists' = processTwoListsWithDefault' (+) 0 0
 
-processTwoLists' :: (a -> a -> b) -> List' a -> List' a -> List' b
+processTwoLists' :: (a -> b -> c) -> List' a -> List' b -> List' c
 processTwoLists' _ _ Nil = Nil
 processTwoLists' _ Nil _ = Nil
 processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
