@@ -35,15 +35,14 @@ module.exports = {
   // The implementation is different than currying as it is specified how many parameters the original function had, but the use of the curried function is the same
   curryAnyWithParameterNumber(numberOfParams, function_) {
     const go = (remainingParams, params, function_) => {
-      return function (a) {
-        params.push(a);
-        remainingParams--;
-        if (remainingParams === 0) {
-          console.log('finished. params = ', params);
-          return function_.apply(null, params);
-        }
-        return go(remainingParams, params, function_);
-      };
+      if (remainingParams === 0) {
+        return function_.apply(null, params);
+      } else {
+        return function (a) {
+          params.push(a);
+          return go(remainingParams - 1, params, function_);
+        };
+      }
     };
     return go(numberOfParams , [], function_);
   }
