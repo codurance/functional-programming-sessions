@@ -78,9 +78,7 @@ map' _ Nil = Nil
 map' f (Cons x xs) = Cons (f x) (map' f xs)
 
 map'' :: (a -> b) -> List' a -> List' b
-map'' = map' Nil
-    where map' accumulated f Nil = accumulated
-          map' accumulated f (Cons x xs) = map' (accumulated `appendEnd` f x) f xs
+map'' f xs = foldl (\acc x -> (acc `appendEnd` f x)) Nil xs
 
 filter' :: (a -> Bool) -> List' a -> List' a
 filter' f Nil = Nil
@@ -91,6 +89,7 @@ take' 0 _ = Nil
 take' _ Nil = Nil
 take' n (Cons x xs) = Cons x (take' (n - 1) xs)
 
+flatMap' :: List' a -> (a -> List' b) -> List' b
 flatMap' xs f = foldl (\accumulated x -> (accumulated `concat'` f x)) Nil xs 
 
 concat' :: List' a -> List' a -> List' a
