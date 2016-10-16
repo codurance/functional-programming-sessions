@@ -108,7 +108,7 @@ processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs
 processTwoListsWithDefault' :: (a -> b -> c) -> a -> b -> List' a -> List' b -> List' c
 processTwoListsWithDefault' f dL dR xs ys = map' f' (zip' xs ys) where
     orDefault maybe default_ = fromMaybe default_ maybe
-    f' = \(x, y) -> f (orDefault x dL) (orDefault y dR)
+    f' = \(x, y) -> f (x `orDefault` dL) (y `orDefault` dR)
 
 zip' :: List' a -> List' b -> List' (Maybe a, Maybe b)
 zip' Nil Nil = Nil
