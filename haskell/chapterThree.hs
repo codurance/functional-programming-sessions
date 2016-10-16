@@ -12,6 +12,10 @@ instance Foldable List' where
     foldr function accumulator Nil = accumulator 
     foldr function accumulator (Cons x xs) = function x (foldr function accumulator xs)
 
+length' :: List' a -> Int
+length' Nil = 0
+length' (Cons x xs) = 1 + length' xs
+
 head' :: List' a -> a
 head' Nil = error "head of nothing???"
 head' (Cons a _) = a
@@ -83,6 +87,11 @@ filter'  = filter'' Nil where
     filter'' accumulated _ Nil = accumulated
     filter'' accumulated f (Cons x xs) = filter'' next f xs where
          next = if (f x) then (accumulated `appendEnd` x) else accumulated 
+
+take' :: Int -> List' a -> List' a
+take' 0 _ = Nil
+take' _ Nil = Nil
+take' n (Cons x xs) = Cons x (take' (n - 1) xs)
     
 
 main = hspec $ do
@@ -164,3 +173,15 @@ main = hspec $ do
             ((filter' odd (apply' [1,2,3,4,5])) `shouldBe` apply' [1,3,5])
             ((filter' odd (apply' [])) `shouldBe` apply' [])
 
+    describe "take' takes the specified number of elements, possibly from an infinite list" $ do
+        it "from an empty list" $ do
+            (length' (take' 2 $ apply' [])) `shouldBe` 0;
+            (length' (take' 0 $ apply' [])) `shouldBe` 0;
+
+        it "from a non-empty list" $ do
+            ((take' 2 $ apply' [1,3,5]) `shouldBe` apply' [1,3])
+            ((take' 0 $ apply' [1,3,5]) `shouldBe` apply' [])
+        
+        it "from an infinite list" $ do
+            ((take' 2 $ apply' [1..]) `shouldBe` apply' [1,2])
+            ((take' 0 $ apply' [1..]) `shouldBe` apply' [])
