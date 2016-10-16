@@ -91,10 +91,7 @@ take' 0 _ = Nil
 take' _ Nil = Nil
 take' n (Cons x xs) = Cons x (take' (n - 1) xs)
 
-flatMap' :: List' a -> (a -> List' b) -> List' b
-flatMap' = flatMap'' Nil
-    where flatMap'' accumulated Nil f = accumulated
-          flatMap'' accumulated (Cons x xs) f = flatMap'' (accumulated `concat'` f x) xs f
+flatMap' xs f = foldl (\accumulated x -> (accumulated `concat'` f x)) Nil xs 
 
 concat' :: List' a -> List' a -> List' a
 concat' Nil new = new
