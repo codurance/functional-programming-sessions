@@ -105,10 +105,16 @@ processTwoLists' _ Nil _ = Nil
 processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
 
 processTwoListsWithDefault' :: (a -> b -> c) -> a -> b -> List' a -> List' b -> List' c
-processTwoListsWithDefault' f dL dR Nil Nil = Nil
-processTwoListsWithDefault' f dL dR (Cons x xs) Nil = Cons (f x dR) (processTwoListsWithDefault' f dL dR xs Nil)
-processTwoListsWithDefault' f dL dR Nil (Cons x xs) = Cons (f dL x) (processTwoListsWithDefault' f dL dR Nil xs)
-processTwoListsWithDefault' f dL dR (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoListsWithDefault' f dL dR xs ys)
+processTwoListsWithDefault' f dL dR xs ys = map' f' (zip' xs ys) where
+    ifNil (Just x) d = x
+    ifNil Nothing d = d
+    f' = \(x, y) -> f (ifNil x dL) (ifNil y dR)
+
+zip' :: List' a -> List' b -> List' (Maybe a, Maybe b)
+zip' Nil Nil = Nil
+zip' (Cons x xs) Nil = Cons (Just x, Nothing) (zip' xs Nil)
+zip' Nil (Cons x xs) = Cons (Nothing, Just x) (zip' Nil xs)
+zip' (Cons x xs) (Cons y ys) = Cons (Just x, Just y) (zip' xs ys)
 
 
 main = hspec $ do
