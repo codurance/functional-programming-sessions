@@ -97,15 +97,19 @@ concat' Nil new = new
 concat' (Cons x xs) new = Cons x (concat' xs new)
 
 sumTwoLists' :: Num a => List' a -> List' a -> List' a
-sumTwoLists' x Nil = x
-sumTwoLists' Nil x = x
-sumTwoLists' (Cons x xs) (Cons y ys) = (Cons (x + y) (sumTwoLists' xs ys))
+sumTwoLists' = processTwoListsWithDefault' (+) 0 0
 
 processTwoLists' :: (a -> a -> b) -> List' a -> List' a -> List' b
 processTwoLists' _ _ Nil = Nil
 processTwoLists' _ Nil _ = Nil
 processTwoLists' f (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoLists' f xs ys)
-    
+
+processTwoListsWithDefault' :: (a -> a -> b) -> a -> a -> List' a -> List' a -> List' b
+processTwoListsWithDefault' f dL dR Nil Nil = Nil
+processTwoListsWithDefault' f dL dR (Cons x xs) Nil = Cons (f x dR) (processTwoListsWithDefault' f dL dR xs Nil)
+processTwoListsWithDefault' f dL dR Nil (Cons x xs) = Cons (f dL x) (processTwoListsWithDefault' f dL dR Nil xs)
+processTwoListsWithDefault' f dL dR (Cons x xs) (Cons y ys) = Cons (f x y) (processTwoListsWithDefault' f dL dR xs ys)
+
 
 main = hspec $ do
     describe "head" $ do
