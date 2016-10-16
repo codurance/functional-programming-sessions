@@ -229,18 +229,18 @@ main = hspec $ do
         it "both infinite lists" $ do
             (take' 10 (sumTwoLists' (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
 
-    describe "processTwoLists - accepts two lists and applies a function to its elements" $ do
+    describe "processTwoLists - accepts two lists and applies a function to its elements. applies the function to the elements in order" $ do
         it "empty list" $ do
-            length' (processTwoLists' (+) Nil Nil) `shouldBe` 0;
+            length' (processTwoLists' (-) Nil Nil) `shouldBe` 0;
 
         it "one empty list and the other non-empty. The resulting list is as long as the shortest of the two arguments" $ do
-            (processTwoLists' (+) (apply' [1,2,3]) Nil) `shouldBe` Nil;
-            (processTwoLists' (+) Nil (apply' [1,2,3])) `shouldBe` Nil;
+            (processTwoLists' (-) (apply' [1,2,3]) Nil) `shouldBe` Nil;
+            (processTwoLists' (-) Nil (apply' [1,2,3])) `shouldBe` Nil;
 
         it "both non-empty lists" $ do
-            (processTwoLists' (+) (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [2,4..6];
+            (processTwoLists' (-) (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [0,0,0];
         
         it "both infinite lists" $ do
-            (take' 10 (processTwoLists' (+) (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
+            (take' 10 (processTwoLists' (-) (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' $ repeat 0);
 
 
