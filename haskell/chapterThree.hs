@@ -83,10 +83,8 @@ map'' = map' Nil
           map' accumulated f (Cons x xs) = map' (accumulated `appendEnd` f x) f xs
 
 filter' :: (a -> Bool) -> List' a -> List' a
-filter'  = filter'' Nil where
-    filter'' accumulated _ Nil = accumulated
-    filter'' accumulated f (Cons x xs) = filter'' next f xs where
-         next = if (f x) then (accumulated `appendEnd` x) else accumulated 
+filter' f Nil = Nil
+filter' f (Cons x xs) = if (f x) then (Cons x (filter' f xs)) else (filter' f xs)
 
 take' :: Int -> List' a -> List' a
 take' 0 _ = Nil
@@ -168,10 +166,13 @@ main = hspec $ do
             ((map'' id (apply' [1,2])) `shouldBe` apply' [1,2])
             ((map'' id (apply' [1])) `shouldBe` apply' [1])
 
-    describe "filter'" $ do
-        it "keeps the elements which satisfy the predicate" $ do
+    describe "filter' - keeps the elements which satisfy the predicate" $ do
+        it "from a finite list" $ do
             ((filter' odd (apply' [1,2,3,4,5])) `shouldBe` apply' [1,3,5])
             ((filter' odd (apply' [])) `shouldBe` apply' [])
+        
+        it "from an infinite list" $ do
+            (take' 3 (filter' odd (apply' [1..])) `shouldBe` apply' [1,3,5])
 
     describe "take' takes the specified number of elements, possibly from an infinite list" $ do
         it "from an empty list" $ do
