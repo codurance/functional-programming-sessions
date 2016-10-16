@@ -82,7 +82,7 @@ map'' f xs = foldl (\acc x -> (acc `appendEnd` f x)) Nil xs
 
 filter' :: (a -> Bool) -> List' a -> List' a
 filter' f Nil = Nil
-filter' f (Cons x xs) = if (f x) then (Cons x (filter' f xs)) else (filter' f xs)
+filter' f xs = flatMap' xs (\x -> if (f x) then (Cons x Nil) then Nil) 
 
 take' :: Int -> List' a -> List' a
 take' 0 _ = Nil
