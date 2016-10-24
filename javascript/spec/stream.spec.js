@@ -141,6 +141,7 @@ function infiniteStreamOfNaturalNumbers() {
 //   return get_(stream, ordinal).value();
 // }
 
+// get :: Stream a -> Int -> a
 function get(stream, ordinal) {
   const xx = range(ordinal - 1);
   return xx.reduce(advanceStream, stream).value();
