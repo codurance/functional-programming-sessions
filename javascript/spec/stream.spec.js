@@ -66,9 +66,7 @@ function streamToList(finiteStream) {
   };
 };
 
-function reduce_(function_,
-                 accumulator,
-                 stream) {
+function reduce_(function_, accumulator, stream) {
   if (stream === undefined) {
     return accumulator;
   } else {
