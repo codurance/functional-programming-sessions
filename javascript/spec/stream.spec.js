@@ -59,13 +59,11 @@ describe('A stream of natural numbers', () => {
 });
 
 function streamToList(finiteStream) {
-  return reduce_(
-    (acc, ele) => {
-      acc.push(ele);
-      return acc;
-    },
-    [],
-    finiteStream);
+  return reduce_( appendTo, [], finiteStream);
+  function appendTo(acc, ele) {
+    acc.push(ele);
+    return acc;
+  };
 };
 
 function reduce_(function_,
