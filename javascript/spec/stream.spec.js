@@ -49,11 +49,26 @@ describe('A stream of natural numbers', () => {
   });
 
   it('converts a finite stream to a list', () => {
-    const aNaturalNumbersStream = finiteStreamOfNaturalNumbers(4);
-    const expectedList = [1, 2, 3, 4];
-    expect(streamToList(aNaturalNumbersStream)).to.equal(expectedList);
-  })
+    let aNaturalNumbersStream = finiteStreamOfNaturalNumbers(4);
+    let expectedList = [1, 2, 3, 4];
+    expect(streamToList(aNaturalNumbersStream)).to.eql(expectedList);
+
+    aNaturalNumbersStream = finiteStreamOfNaturalNumbers(5);
+    expectedList = [1, 2, 3, 4, 5];
+    expect(streamToList(aNaturalNumbersStream)).to.eql(expectedList);
+  });
 });
+
+function streamToList(finiteStream) {
+  function getValue(currentStream, list) {
+    list.push(currentStream.value());
+    if (currentStream.next() === undefined) {
+      return list;
+    }
+    return getValue(currentStream.next(), list);
+  }
+  return getValue(finiteStream, []);
+};
 
 function finiteStreamOfNaturalNumbers(numberOfElements) {
   const stream_= function (current, numberOfPendingElements) {
