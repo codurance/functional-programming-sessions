@@ -47,6 +47,12 @@ describe('A stream of natural numbers', () => {
       expect(lastValueOfTheStream.next()).to.equal(undefined);
     });
   });
+
+  it('converts a finite stream to a list', () => {
+    const aNaturalNumbersStream = finiteStreamOfNaturalNumbers(4);
+    const expectedList = [1, 2, 3, 4];
+    expect(streamToList(aNaturalNumbersStream)).to.equal(expectedList);
+  })
 });
 
 function finiteStreamOfNaturalNumbers(numberOfElements) {
