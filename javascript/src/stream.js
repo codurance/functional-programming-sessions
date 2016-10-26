@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {streamToList,reduce_,finiteStreamOfNaturalNumbers,infiniteStreamOfNaturalNumbers,get,take};
+module.exports = {streamToList,reduce_,finiteStreamOfNaturalNumbers,infiniteStreamOfNaturalNumbers,get,take, takeWhile};
 
 function streamToList(finiteStream) {
   return reduce_( appendTo, [], finiteStream);
@@ -111,4 +111,17 @@ function take(stream, number) {
   }
 
   return go([], stream, number);
+}
+
+function takeWhile(predicate, stream) {
+  function go(result, predicate, stream) {
+    if (predicate(stream.value())) {
+      result.push(stream.value());
+      return go(result, predicate, stream.next());
+    } else {
+      return result;
+    }
+  }
+
+  return go([], predicate, stream);
 }
