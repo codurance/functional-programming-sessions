@@ -101,9 +101,14 @@ function get(stream, ordinal) {
 }
 
 function take(stream, number) {
-  if (number === 1) {
-    return [stream.value()];
-  } else { 
-    return [stream.value(), stream.next().value()];
+  function go(accumulated, stream, remaining) {
+    accumulated.push(stream.value());
+    if (remaining === 1) {
+      return accumulated;
+    } else { 
+      return go(accumulated, stream.next(), remaining - 1); 
+    }
   }
+
+  return go([], stream, number);
 }
