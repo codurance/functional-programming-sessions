@@ -103,7 +103,7 @@ function get(stream, ordinal) {
 function take(stream, number) {
   function go(accumulated, stream, remaining) {
     accumulated.push(stream.value());
-    if (remaining === 1) {
+    if (stream.next() === undefined || remaining === 1) {
       return accumulated;
     } else { 
       return go(accumulated, stream.next(), remaining - 1); 
