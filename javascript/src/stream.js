@@ -100,6 +100,10 @@ function get(stream, ordinal) {
   };
 }
 
-function take(stream) {
-  return [stream.value()];
+function take(stream, number) {
+  if (number === 1) {
+    return [stream.value()];
+  } else { 
+    return [stream.value(), stream.next().value()];
+  }
 }

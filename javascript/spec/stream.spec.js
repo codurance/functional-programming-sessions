@@ -62,6 +62,10 @@ describe('A stream of natural numbers', () => {
     it('takes a single elemnt', () => {
       expect(stream.take(stream.infiniteStreamOfNaturalNumbers(), 1)).to.eql([1]);
     });
+    
+    it('takes two elements', () => {
+      expect(stream.take(stream.infiniteStreamOfNaturalNumbers(), 2)).to.eql([1,2]);
+    });
   });
 });
 
