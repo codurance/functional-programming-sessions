@@ -87,4 +87,12 @@ class ListTest extends FlatSpec with Matchers {
     "Initialising a list" should "return the list without the last element" in {
         init(List(1, 2, 3, 4)) should be(List(1, 2, 3))
     }
+
+    "Folding right an empty list with sum" should "return 0" in {
+        foldRight(List[Int](), 0)((a, b) => a + b) should be(0)
+    }
+
+    "Folding right a list of integers with sum" should "return sum of the elements in the list" in {
+        foldRight(List(1, 2, 3), 0)((a, b) => a + b) should be(6)
+    }
 }
