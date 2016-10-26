@@ -76,6 +76,7 @@ describe('A stream of natural numbers', () => {
   describe('Chapter 5 - Exercise 3 - takeWhile', () => {
     it('takes the elements while they match the predicate', () => {
       expect(stream.takeWhile((n) => n < 3, stream.infiniteStreamOfNaturalNumbers())).to.eql([1,2]);
+      expect(stream.takeWhile((n) => false, stream.infiniteStreamOfNaturalNumbers())).to.eql([]);
     });
   });
 });
