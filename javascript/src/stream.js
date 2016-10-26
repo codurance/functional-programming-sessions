@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {streamToList,reduce_,finiteStreamOfNaturalNumbers,infiniteStreamOfNaturalNumbers,get};
+module.exports = {streamToList,reduce_,finiteStreamOfNaturalNumbers,infiniteStreamOfNaturalNumbers,get,take};
 
 function streamToList(finiteStream) {
   return reduce_( appendTo, [], finiteStream);
@@ -98,4 +98,8 @@ function get(stream, ordinal) {
   function range(n) {
     return [...Array(n).keys()];
   };
+}
+
+function take(stream) {
+  return [stream.value()];
 }

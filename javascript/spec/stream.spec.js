@@ -57,5 +57,11 @@ describe('A stream of natural numbers', () => {
     expectedList = [1, 2, 3, 4, 5];
     expect(stream.streamToList(aNaturalNumbersStream)).to.eql(expectedList);
   });
+
+  describe('take', () => {
+    it('takes a single elemnt', () => {
+      expect(stream.take(stream.infiniteStreamOfNaturalNumbers(), 1)).to.eql([1]);
+    });
+  });
 });
 
