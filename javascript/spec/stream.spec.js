@@ -25,7 +25,7 @@ describe('A stream of natural numbers', () => {
     // expect(get(streamCreator((n) => 2 * n, 1)), 4).to.equal(8);
   });
 
-  describe('finite stream of natural numbers', () =>{
+  describe('finite stream of natural numbers', () => {
     let stream;
     beforeEach(() => {
       stream = finiteStreamOfNaturalNumbers(4);
@@ -47,7 +47,6 @@ describe('A stream of natural numbers', () => {
       expect(lastValueOfTheStream.next()).to.equal(undefined);
     });
   });
-
   it('converts a finite stream to a list', () => {
     let aNaturalNumbersStream = finiteStreamOfNaturalNumbers(4);
     let expectedList = [1, 2, 3, 4];
@@ -60,18 +59,38 @@ describe('A stream of natural numbers', () => {
 });
 
 function streamToList(finiteStream) {
-  function getValue(currentStream, list) {
-    list.push(currentStream.value());
-    if (currentStream.next() === undefined) {
-      return list;
-    }
-    return getValue(currentStream.next(), list);
-  }
-  return getValue(finiteStream, []);
+  return reduce_(
+    (acc, ele) => {
+      acc.push(ele);
+      return acc;
+    },
+    [],
+    finiteStream);
 };
 
+function reduce_(function_,
+                 accumulator,
+                 stream) {
+  if (stream === undefined) {
+    return accumulator;
+  } else {
+    return reduce_(function_, function_(accumulator, stream.value()), stream.next());
+  }
+}
+
+// function streamToList(finiteStream) {
+//   function getValue(currentStream, list) {
+//     list.push(currentStream.value());
+//     if (currentStream.next() === undefined) {
+//       return list;
+//     }
+//     return getValue(currentStream.next(), list);
+//   }
+//   return getValue(finiteStream, []);
+// };
+
 function finiteStreamOfNaturalNumbers(numberOfElements) {
-  const stream_= function (current, numberOfPendingElements) {
+  const stream_ = function (current, numberOfPendingElements) {
     return {
       value: function () {
         return current;
@@ -89,7 +108,7 @@ function finiteStreamOfNaturalNumbers(numberOfElements) {
 }
 
 function infiniteStreamOfNaturalNumbers() {
-  const stream_= function (current) {
+  const stream_ = function (current) {
     return {
       value: function () {
         return current;
