@@ -13,17 +13,17 @@ describe('Pattern Matching', () => {
       const alwaysMatches = match({n},
         () => true, ({ n }) => n);
 
-      expect(alwaysMatches).to.equal(1);
+      expect(alwaysMatches).to.equal(n);
     });
   });
 
   describe('From a set of arrays', () => {
     it('always matches sample case', () => {
       const n = 1;
-      const alwaysMatches = match({n },
+      const alwaysMatches = match({n},
         [() => true, ({ n }) => n]);
 
-      expect(alwaysMatches).to.equal(1);
+      expect(alwaysMatches).to.equal(n);
     });
   });
 });
