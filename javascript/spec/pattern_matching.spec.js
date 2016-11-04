@@ -5,13 +5,14 @@ const expect = chai.expect;
 chai.config.includeStack = true;
 
 const match = require('./../src/pattern_matching');
+const tautology = () => true;
 
 describe('Pattern Matching', () => {
   describe('From a set of objects (that are not arrays)', () => {
     it('always matches sample case', () => {
       const n = 1;
       const alwaysMatches = match({n},
-        () => true, ({ n }) => n);
+        tautology, ({ n }) => n);
 
       expect(alwaysMatches).to.equal(n);
     });
@@ -21,7 +22,7 @@ describe('Pattern Matching', () => {
     it('always matches sample case', () => {
       const n = 1;
       const alwaysMatches = match({n},
-        [() => true, ({ n }) => n]);
+        [tautology, ({ n }) => n]);
 
       expect(alwaysMatches).to.equal(n);
     });
