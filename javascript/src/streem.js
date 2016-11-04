@@ -18,7 +18,19 @@ class InfiniteNaturalStream {
         ({n}) => n === 0, ({result}) =>  result,
         () => true, ({result, n}) => result.concat([this.value]).concat(this.next().take(n-1))
     ));
-    return take_([], n);
+
+    const take__ = funct((result, n) =>
+      match({result, n},
+        [({n}) => n === 0, ({result}) =>  result],
+        [() => true, ({result, n}) => result.concat([this.value]).concat(this.next().take(n-1))]
+      ));
+
+    const withNClausesDirectly = take_([], n);
+    const withNClauseAsArray = take__([], n);
+    if (withNClauseAsArray.toString() !== withNClausesDirectly.toString()) {
+      throw new Error(`They're not equal ${withNClauseAsArray}, ${withNClausesDirectly}`);
+    }
+    return withNClauseAsArray;
   }
 }
 
@@ -49,6 +61,16 @@ function match(parameters, ...equationParts) {
   return undefined;
 
   function pair(equations) {
+    if (Array.isArray(equations[0])) {
+      const result = [];
+      for (let i = 0; i < equations.length; i++) {
+        const predicate = equations[i][0];
+        const clause = equations[i][1];
+        result.push({predicate, clause});
+      }
+      return result;
+    }
+
     const result = [];
     for (let i = 0; i < equations.length; i+=2) {
       const predicate = equations[i];
