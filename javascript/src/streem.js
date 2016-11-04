@@ -17,8 +17,7 @@ class InfiniteNaturalStream {
       if (n === 0) {
         return result;
       } else {
-        result.push(this.value);
-        return result.concat(this.next().take(n-1));
+        return result.concat([this.value]).concat(this.next().take(n-1));
       }
     }
     take_ = take_.bind(this);
