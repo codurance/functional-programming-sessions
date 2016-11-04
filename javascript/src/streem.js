@@ -14,8 +14,8 @@ class InfiniteNaturalStream {
 
   take(n) {
     const take_ = funct((result, n) =>
-      match(n, {result, n},
-        (n) => n === 0, ({result}) =>  result,
+      match({result, n},
+        ({n}) => n === 0, ({result}) =>  result,
         () => true, ({result, n}) => result.concat([this.value]).concat(this.next().take(n-1))
     ));
     return take_([], n);
@@ -35,12 +35,12 @@ function funct(lambda) {
   return lambda.bind(this);
 }
 
-function match(toMatchOn, parameters, ...equationParts) {
+function match(parameters, ...equationParts) {
   const equations = pair(equationParts);
   for (let i = 0; i < equations.length; i++) {
     const equation = equations[i];
 
-    const predicateMatches = equation.predicate(toMatchOn);
+    const predicateMatches = equation.predicate(parameters);
     if (predicateMatches) {
       return equation.clause(parameters);
     }
