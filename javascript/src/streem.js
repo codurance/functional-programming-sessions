@@ -28,6 +28,11 @@ function infiniteNaturals() {
   return new InfiniteNaturalStream(1);
 }
 
+/**
+ * Binds the parameter with the correct `this`
+ * @param lambda
+ * @returns {function(this:funct)}
+ */
 function funct(lambda) {
   return lambda.bind(this);
 }
