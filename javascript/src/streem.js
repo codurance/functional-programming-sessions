@@ -13,18 +13,21 @@ class InfiniteNaturalStream {
   }
 
   take(n) {
-    function take_(result, n) {
+    const take_ = funct((result, n) => {
       if (n === 0) {
         return result;
       } else {
         return result.concat([this.value]).concat(this.next().take(n-1));
       }
-    }
-    take_ = take_.bind(this);
+    });
     return take_([], n);
   }
 }
 
 function infiniteNaturals() {
   return new InfiniteNaturalStream(1);
+}
+
+function funct(lambda) {
+  return lambda.bind(this);
 }
