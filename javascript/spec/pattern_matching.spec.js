@@ -26,5 +26,16 @@ describe('Pattern Matching', () => {
 
       expect(alwaysMatches).to.equal(n);
     });
+
+    it('can do recursion, specifying the clauses in order', () => {
+      function alwaysMatches(n) {
+        return match({n},
+          [({n}) => n ===1, () => 2],
+          [tautology, ({n}) => (1 + alwaysMatches(n-1))]);
+      }
+
+      expect(alwaysMatches(2)).to.equal(3);
+    });
+
   });
 });
