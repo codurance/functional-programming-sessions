@@ -52,5 +52,18 @@ describe('Pattern Matching', () => {
       }
       expect(exception).to.be.not.undefined;
     });
+
+    it('will complain if the clause is not a function', () => {
+      const NOT_A_FUNCTION = 2;
+      let exception = undefined;
+      try {
+        match({},
+          [tautology, NOT_A_FUNCTION]);
+      } catch (e) {
+        expect(e).to.be.not.undefined;
+        exception = e;
+      }
+      expect(exception).to.be.not.undefined;
+    });
   });
 });

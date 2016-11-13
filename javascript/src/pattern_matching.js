@@ -36,12 +36,18 @@ function match(parameters, ...equationParts) {
     }
     return result;
   }
-  
+
   function check(equations) {
     equations.forEach(equation => {
       if (!isFunction(equation.predicate)) {
         throw Error('Predicate '+equations.predicate+' is not a function');
-      }});
+      }
+
+      if (!isFunction(equation.clause)) {
+        throw Error('Clause '+equations.clause+' is not a function');
+      }
+
+    });
 
     // Simple typeof comparison
     // (with strict equality)
