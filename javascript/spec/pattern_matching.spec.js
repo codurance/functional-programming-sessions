@@ -52,6 +52,8 @@ describe('Pattern Matching', () => {
         exception = e;
       }
       expect(exception).to.be.not.undefined;
+      expect(exception.message).to.contain('Predicate');
+      expect(exception.message).to.contain('is not a function');
     });
 
     it('will complain if the clause is not a function', () => {
