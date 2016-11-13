@@ -6,6 +6,7 @@ chai.config.includeStack = true;
 
 const match = require('./../src/pattern_matching');
 const tautology = () => true;
+const contradiction = () => false;
 
 describe('Pattern Matching', () => {
   describe('From a set of objects (that are not arrays)', () => {
@@ -64,6 +65,19 @@ describe('Pattern Matching', () => {
         exception = e;
       }
       expect(exception).to.be.not.undefined;
+    });
+
+    it('will complain if about the non-exhaustiveness of the predicates', () => {
+      let exception = undefined;
+      try {
+        match({},
+          [contradiction, tautology]);
+      } catch (e) {
+        expect(e).to.be.not.undefined;
+        exception = e;
+      }
+      expect(exception).to.be.not.undefined;
+      expect(exception.message).to.contain('Non-exhaustive pattern-matching');
     });
   });
 });

@@ -15,7 +15,7 @@ function match(parameters, ...equationParts) {
     }
   }
 
-  return undefined;
+  throw Error('Non-exhaustive pattern-matching');
 
   function pair(equations) {
     if (Array.isArray(equations[0])) {
