@@ -37,5 +37,20 @@ describe('Pattern Matching', () => {
       expect(alwaysMatches(2)).to.equal(3);
     });
 
+
+  });
+  describe('sad paths', () => {
+    it('will complain if the predicate is not a function', () => {
+      const NOT_A_FUNCTION = 2;
+      let exception = undefined;
+      try {
+        match({},
+          [NOT_A_FUNCTION, tautology]);
+      } catch (e) {
+        expect(e).to.be.not.undefined;
+        exception = e;
+      }
+      expect(exception).to.be.not.undefined;
+    });
   });
 });

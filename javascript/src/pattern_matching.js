@@ -4,6 +4,8 @@ module.exports = match;
 
 function match(parameters, ...equationParts) {
   const equations = pair(equationParts);
+
+  check(equations);
   for (let i = 0; i < equations.length; i++) {
     const equation = equations[i];
 
@@ -33,5 +35,18 @@ function match(parameters, ...equationParts) {
       result.push({predicate, clause});
     }
     return result;
+  }
+  
+  function check(equations) {
+    equations.forEach(equation => {
+      if (!isFunction(equation.predicate)) {
+        throw Error('Predicate '+equations.predicate+' is not a function');
+      }});
+
+    // Simple typeof comparison
+    // (with strict equality)
+    function isFunction(object) {
+      return typeof(object) === 'function';
+    }
   }
 }
