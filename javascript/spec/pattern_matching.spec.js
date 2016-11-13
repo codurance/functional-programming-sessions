@@ -65,6 +65,8 @@ describe('Pattern Matching', () => {
         exception = e;
       }
       expect(exception).to.be.not.undefined;
+      expect(exception.message).to.contain('Clause');
+      expect(exception.message).to.contain('is not a function');
     });
 
     it('will complain if about the non-exhaustiveness of the predicates', () => {
