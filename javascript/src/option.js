@@ -47,12 +47,8 @@ class Option {
   }
 
   filter(predicate) {
-    if (this.isPresent()) {
-      if (predicate(this.value)) {
-        return this;
-      } else {
-        return Option.empty();
-      }
+    if (this.isPresent() && predicate(this.value)) {
+      return this;
     } else {
       return Option.empty();
     }
