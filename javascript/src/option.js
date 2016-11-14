@@ -46,6 +46,18 @@ class Option {
     }
   }
 
+  filter(predicate) {
+    if (this.isPresent()) {
+      if (predicate(this.value)) {
+        return this;
+      } else {
+        return Option.empty();
+      }
+    } else {
+      return Option.empty();
+    }
+  }
+
   isPresent() {
     if (this.value) {
       return true;

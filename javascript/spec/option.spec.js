@@ -61,5 +61,35 @@ describe('Option', () => {
         expect(option.empty().orElse(option.empty())).to.eql(option.empty());
       });
     });
+
+    describe('filter', () => {
+      it('value is present, with a tautology', () =>{
+        expect(option.of(1).filter(() => true)).to.eql(option.of(1));
+      });
+
+      it('value is present, with a contradiction', () =>{
+        expect(option.of(1).filter(() => false)).to.eql(option.empty());
+      });
+
+      it('value is present, matching the value in the option', () =>{
+        expect(option.of(1).filter((n) => n===1)).to.eql(option.of(1));
+      });
+
+      it('value is present, not matching the value in the option', () =>{
+        expect(option.of(1).filter((n) => n===2)).to.eql(option.empty());
+      });
+
+      it('value is missing, with a tautology', () =>{
+        expect(option.empty().filter(() => true)).to.eql(option.empty());
+      });
+
+      it('value is missing, with a contradiction', () =>{
+        expect(option.empty().filter(() => false)).to.eql(option.empty());
+      });
+
+      it('value is missing, but you can filter by a predicate using it', () =>{
+        expect(option.empty().filter((n) => n===2)).to.eql(option.empty());
+      });
+    });
   });
 });
