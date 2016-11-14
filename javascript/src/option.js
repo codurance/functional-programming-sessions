@@ -30,6 +30,14 @@ class Option {
     }
   }
 
+  getOrElse(defaultValue) {
+    if (this.isPresent()) {
+      return this.value;
+    } else {
+      return defaultValue;
+    }
+  }
+
   isPresent() {
     if (this.value) {
       return true;

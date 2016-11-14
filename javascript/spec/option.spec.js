@@ -37,5 +37,15 @@ describe('Option', () => {
         expect(option.empty().flatMap(() => option.empty())).to.eql(option.empty());
       });
     });
+
+    describe('getOrElse', () => {
+      it('value is present, using the value present', () =>{
+        expect(option.of(1).getOrElse(0)).to.eql(1);
+      });
+
+      it('value is missing, then using the provided value', () =>{
+        expect(option.empty().getOrElse(1)).to.eql(1);
+      });
+    });
   });
 });
