@@ -2,8 +2,8 @@
 
 module.exports = {
   of,
-  empty
 };
+
 
 class Option {
 
@@ -31,3 +31,5 @@ function of(value) {
 function empty() {
   return Option.empty();
 }
+
+module.exports['empty'] = (Option.empty)
