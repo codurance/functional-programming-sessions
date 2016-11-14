@@ -19,6 +19,8 @@ describe('Option', () => {
     });
 
     describe('flatMap', () => {
+      // The presence of the result is:
+      // presence of input AND function returning a present
       it('both values are present', () =>{
         expect(option.of(1).flatMap(n => option.of(n+1))).to.eql(option.of(2));
       });
