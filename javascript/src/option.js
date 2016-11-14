@@ -38,6 +38,14 @@ class Option {
     }
   }
 
+  orElse(defaultOption) {
+    if (this.isPresent()) {
+      return this;
+    } else {
+      return defaultOption;
+    }
+  }
+
   isPresent() {
     if (this.value) {
       return true;
