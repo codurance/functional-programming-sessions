@@ -22,6 +22,14 @@ class Option {
     }
   }
 
+  flatMap(function_) {
+    if (this.isPresent()) {
+      return function_(this.value);
+    } else {
+      return Option.empty();
+    }
+  }
+
   isPresent() {
     if (this.value) {
       return true;
