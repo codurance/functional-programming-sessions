@@ -15,10 +15,18 @@ class Option {
   }
 
   map(function_) {
-    if (this.value) {
+    if (this.isPresent()) {
       return Option.of(function_(this.value));
     } else {
       return Option.empty();
+    }
+  }
+
+  isPresent() {
+    if (this.value) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
