@@ -18,7 +18,7 @@ class Option {
     if (this.value) {
       return Option.of(function_(this.value));
     } else {
-      return this;
+      return Option.empty();
     }
   }
 }
