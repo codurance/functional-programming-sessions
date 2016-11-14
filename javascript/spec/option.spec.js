@@ -6,6 +6,17 @@ chai.config.includeStack = true;
 
 const option = require('./../src/option');
 
+function variance(values) {
+
+  const mean = meanOf(values);
+
+  return option.of(meanOf(values
+    .map(element => element - mean)
+    .map(element => Math.pow(element, 2))));
+  function meanOf(values) {
+    return values.reduce((accumulator, element) => accumulator + element) / values.length;
+  }
+}
 describe('Option', () => {
   describe('Exercise 1 Implement the Option itself', () => {
     describe('map', () => {
@@ -90,6 +101,12 @@ describe('Option', () => {
       it('value is missing, but you can filter by a predicate using it', () =>{
         expect(option.empty().filter((n) => n===2)).to.eql(option.empty());
       });
+    });
+  });
+
+  describe('Exercise 2 - Variance', () => {
+    it('it is 0', ()=>{
+      expect(variance([1,1,1])).to.eql(option.of(0.0));
     });
   });
 });
