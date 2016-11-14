@@ -1,5 +1,7 @@
 'use strict';
 
+const match = require('./pattern_matching');
+
 module.exports = {infiniteNaturals};
 
 class InfiniteNaturalStream {
@@ -13,14 +15,24 @@ class InfiniteNaturalStream {
   }
 
   take(n) {
-    const take_ = funct((result, n) => {
-      if (n === 0) {
-        return result;
-      } else {
-        return result.concat([this.value]).concat(this.next().take(n-1));
-      }
-    });
-    return take_([], n);
+    const take_ = funct((result, n) =>
+      match({result, n},
+        ({n}) => n === 0, ({result}) =>  result,
+        () => true, ({result, n}) => result.concat([this.value]).concat(this.next().take(n-1))
+    ));
+
+    const take__ = funct((result, n) =>
+      match({result, n},
+        [({n}) => n === 0, ({result}) =>  result],
+        [() => true, ({result, n}) => result.concat([this.value]).concat(this.next().take(n-1))]
+      ));
+
+    const withNClausesDirectly = take_([], n);
+    const withNClauseAsArray = take__([], n);
+    if (withNClauseAsArray.toString() !== withNClausesDirectly.toString()) {
+      throw new Error(`They're not equal ${withNClauseAsArray}, ${withNClausesDirectly}`);
+    }
+    return withNClauseAsArray;
   }
 }
 
