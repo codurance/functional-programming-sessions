@@ -10,7 +10,7 @@ data List' a = Nil
              | Cons a (List' a) deriving (Show, Eq)
 
 instance Foldable List' where
-    foldr function accumulator Nil = accumulator 
+    foldr function accumulator Nil = accumulator
     foldr function accumulator (Cons x xs) = function x (foldr function accumulator xs)
 
 length' :: List' a -> Int
@@ -30,7 +30,7 @@ sum' Nil = 0
 sum' (Cons x xs) = x + sum' xs
 
 sum'' :: List' Int -> Int
-sum'' = foldl' (+) 0 
+sum'' = foldl' (+) 0
 
 product' :: List' Int -> Int
 product' Nil = 1
@@ -91,7 +91,7 @@ take' _ Nil = Nil
 take' n (Cons x xs) = Cons x (take' (n - 1) xs)
 
 flatMap' :: List' a -> (a -> List' b) -> List' b
-flatMap' xs f = foldl (\acc x -> (acc `concat'` f x)) Nil xs 
+flatMap' xs f = foldl (\acc x -> (acc `concat'` f x)) Nil xs
 
 concat' :: List' a -> List' a -> List' a
 concat' Nil new = new
@@ -173,7 +173,7 @@ main = hspec $ do
     describe "scanl" $ do
         it "with an empty, it is just the initial value" $
             (scanl'' (+) 1 $  apply' []) `shouldBe`  apply' [1]
-        
+
         it "cumulates the result of executing the function, from the left" $
             (scanl'' (+) 1 $  apply' [1,2,3]) `shouldBe`  apply' [1,2,4,7]
 
@@ -198,7 +198,7 @@ main = hspec $ do
         it "from a finite list" $ do
             ((filter' odd (apply' [1,2,3,4,5])) `shouldBe` apply' [1,3,5])
             ((filter' odd (apply' [])) `shouldBe` apply' [])
-        
+
         it "from an infinite list" $ do
             (take' 3 (filter' odd (apply' [1..])) `shouldBe` apply' [1,3,5])
 
@@ -210,7 +210,7 @@ main = hspec $ do
         it "from a non-empty list" $ do
             ((take' 2 $ apply' [1,3,5]) `shouldBe` apply' [1,3])
             ((take' 0 $ apply' [1,3,5]) `shouldBe` apply' [])
-        
+
         it "from an infinite list" $ do
             ((take' 2 $ apply' [1..]) `shouldBe` apply' [1,2])
             ((take' 0 $ apply' [1..]) `shouldBe` apply' [])
@@ -238,7 +238,7 @@ main = hspec $ do
 
         it "both non-empty lists" $ do
             (sumTwoLists' (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [2,4..6];
-        
+
         it "both infinite lists" $ do
             (take' 10 (sumTwoLists' (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [2,4..]);
 
@@ -252,7 +252,7 @@ main = hspec $ do
 
         it "both non-empty lists" $ do
             (processTwoLists' (-) (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [0,0,0];
-        
+
         it "both infinite lists" $ do
             (take' 10 (processTwoLists' (-) (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' $ repeat 0);
 
@@ -264,7 +264,7 @@ main = hspec $ do
         it "one empty list and the other non-empty" $ do
             (processTwoListsWithDefault' (-) 0 0 (apply' [1,2,3]) Nil) `shouldBe` apply' [1,2,3];
             (processTwoListsWithDefault' (-) 0 0 Nil (apply' [1,2,3])) `shouldBe` apply' [-1,-2,-3];
-        
+
         it "testing the default value on the left" $ do
             (processTwoListsWithDefault' (-) 1 0 Nil (apply' [1,2,3])) `shouldBe` apply' [0,-1,-2];
 
@@ -273,7 +273,7 @@ main = hspec $ do
 
         it "both non-empty lists" $ do
             (processTwoListsWithDefault' (-) 0 0 (apply' [1,2,3]) (apply' [1,2,3])) `shouldBe` apply' [0,0,0];
-        
+
         it "both infinite lists" $ do
             (take' 10 (processTwoListsWithDefault' (-) 0 0 (apply' [1..]) (apply' [1..]))) `shouldBe` (take' 10 $ apply' [0,0..]);
 
