@@ -30,3 +30,11 @@ We will be following the following Functional Calisthenics rules:
 13. Only complete functions
 
 14. Function composition & pipelines
+
+
+# Katas To do:
+
+* Tic Tac Toe
+* Tennis
+* Mars Rover
+* Bank Kata
