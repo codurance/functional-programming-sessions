@@ -29,5 +29,6 @@ object TicTacToe {
   type Board = Stream[Row]
   type GameState = (Board, Player)
 
+  // :( Somehow the implementation got lost
   def play
 }
