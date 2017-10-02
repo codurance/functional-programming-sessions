@@ -38,3 +38,4 @@ We will be following the following Functional Calisthenics rules:
 * Tennis
 * Mars Rover
 * Bank Kata
+* Path Kata - https://github.com/tyrcho/path-kata
