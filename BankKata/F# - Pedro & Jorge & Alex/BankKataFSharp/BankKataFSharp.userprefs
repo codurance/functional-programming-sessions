@@ -1,0 +1,15 @@
+﻿<Properties StartupConfiguration="{00893D6E-58D7-412D-87B8-B1B3F24C7272}|Unit Tests">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BankKataFSharp/Library.fs">
+    <Files>
+      <File FileName="BankKataFSharp/Library.fs" Line="30" Column="21" />
+      <File FileName="Tests/Tests.fs" Line="24" Column="7" NotebookId="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Tests PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
