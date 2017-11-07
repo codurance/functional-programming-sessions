@@ -16,8 +16,7 @@ object BankKata {
         Account(account.transactions ++ List(Withdrawal(amount)))
     }
 
-    def printBankStatement(account: Account): Unit = {
-        println("date || credit || debit || balance")
+    def createBankStatement(account: Account): List[AccountStatement] = {
         // TODO: Extract method here
         account.transactions
             .foldLeft(List[AccountStatement]())((statements: List[AccountStatement], transaction: Transaction) => {
@@ -36,9 +35,17 @@ object BankKata {
                 }
                 accountStatement :: statements
             })
-            .foreach(accountStatement => {
-               println(s"${accountStatement.credit} || ${accountStatement.debit} || ${accountStatement.balance}")
-            })
+    }
+
+    def formatStatement(accountStatements: List[AccountStatement]): List[String] = {
+        accountStatements.map(accountStatement => {
+            s"${accountStatement.credit} || ${accountStatement.debit} || ${accountStatement.balance}"
+        })
+    }
+
+    def printStatement(lines: List[String]): Unit = {
+        println("date || credit || debit || balance")
+        lines.foreach(line => println(line))
     }
 
     def main(args: Array[String]) {
@@ -46,10 +53,10 @@ object BankKata {
             Account(List())
         }
 
-        printBankStatement(
-            withdrawal(Amount(30))(
-                deposit(Amount(50))(
-                    initialAccount())))
+        printStatement(formatStatement(createBankStatement(
+                withdrawal(Amount(30))(
+                    deposit(Amount(50))(
+                        initialAccount())))))
     }
 
 }
