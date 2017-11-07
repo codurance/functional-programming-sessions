@@ -17,20 +17,25 @@ object BankKata {
     }
 
     def createBankStatement(account: Account): List[AccountStatement] = {
+        def previousBalance(statements: List[AccountStatement]) = {
+            if (statements.isEmpty) Amount(0)
+            else statements.head.currentBalance
+        }
+
+        def createAccountStatement(statements: List[AccountStatement], transaction: Transaction) = {
+            transaction match {
+                case Deposit(amount) => AccountStatement(
+                    Left(amount),
+                    Amount(previousBalance(statements).dolars + amount.dolars))
+                case Withdrawal(amount) => AccountStatement(
+                    Right(amount),
+                    Amount(previousBalance(statements).dolars - amount.dolars))
+            }
+        }
+
         account.transactions
             .foldLeft(List[AccountStatement]())((statements: List[AccountStatement], transaction: Transaction) => {
-                // TODO: Extract method here
-                val previousBalance: Amount = if (statements.isEmpty) Amount(0) else statements.head.currentBalance
-                // TODO: Extract method here
-                val accountStatement: AccountStatement = transaction match {
-                    case Deposit(amount) => AccountStatement(
-                        Left(amount),
-                        Amount(previousBalance.dolars + amount.dolars))
-                    case Withdrawal(amount) => AccountStatement(
-                        Right(amount),
-                        Amount(previousBalance.dolars - amount.dolars))
-                }
-                accountStatement :: statements
+                createAccountStatement(statements, transaction) :: statements
             })
     }
 
