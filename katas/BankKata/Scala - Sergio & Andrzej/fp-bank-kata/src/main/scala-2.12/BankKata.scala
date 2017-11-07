@@ -16,7 +16,7 @@ object BankKata {
         Account(account.transactions ++ List(Withdrawal(amount)))
     }
 
-    def createBankStatement(account: Account): List[AccountStatement] = {
+    private def createBankStatement(account: Account): List[AccountStatement] = {
         def previousBalance(statements: List[AccountStatement]) = {
             if (statements.isEmpty) Amount(0)
             else statements.head.currentBalance
@@ -39,8 +39,8 @@ object BankKata {
             })
     }
 
-    def formatBankStatement(accountStatements: List[AccountStatement]): List[String] = {
-        accountStatements.map(accountStatement => {
+    def formatBankStatement(account: Account): List[String] = {
+        createBankStatement(account).map(accountStatement => {
             accountStatement.balance match {
                 case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
                 case Right(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
@@ -54,10 +54,10 @@ object BankKata {
     }
 
     def main(args: Array[String]) {
-        printBankStatement(formatBankStatement(createBankStatement(
+        printBankStatement(formatBankStatement(
                 withdrawal(Amount(30))(
                     deposit(Amount(50))(
-                        Account())))))
+                        Account()))))
     }
 
 }

@@ -3,10 +3,10 @@ import BankKata._
 
 class ExampleTest extends FlatSpec with Matchers {
     "statement lines" should "be formatted" in {
-        val statementLines = formatBankStatement(createBankStatement(
+        val statementLines = formatBankStatement(
             withdrawal(Amount(30))(
                 deposit(Amount(50))(
-                    Account()))))
+                    Account())))
 
         statementLines should be(List(
             " || 30 || 20",
