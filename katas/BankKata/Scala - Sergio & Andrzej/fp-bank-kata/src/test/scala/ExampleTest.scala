@@ -9,6 +9,7 @@ class ExampleTest extends FlatSpec with Matchers {
                     Account())))
 
         statementLines should be(List(
+            "date || credit || debit || balance",
             " || 30 || 20",
             "50 || || 50"))
     }
