@@ -40,13 +40,20 @@ object BankKata {
     }
 
     def formatBankStatement(account: Account): List[String] = {
-        "date || credit || debit || balance" ::
-        createBankStatement(account).map(accountStatement => {
-            accountStatement.balance match {
-                case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
-                case Right(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
-            }
-        })
+        def statementHeader = {
+            "date || credit || debit || balance"
+        }
+
+        def statementLines = {
+            createBankStatement(account).map(accountStatement => {
+                accountStatement.balance match {
+                    case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
+                    case Right(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
+                }
+            })
+        }
+
+        statementHeader :: statementLines
     }
 
     def printBankStatement(lines: List[String]): Unit = {
