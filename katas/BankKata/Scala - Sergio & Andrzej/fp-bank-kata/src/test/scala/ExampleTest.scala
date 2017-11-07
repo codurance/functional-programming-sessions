@@ -6,7 +6,7 @@ class ExampleTest extends FlatSpec with Matchers {
         val statementLines = formatBankStatement(createBankStatement(
             withdrawal(Amount(30))(
                 deposit(Amount(50))(
-                    Account(List())))))
+                    Account()))))
 
         statementLines should be(List(
             " || 30 || 20",

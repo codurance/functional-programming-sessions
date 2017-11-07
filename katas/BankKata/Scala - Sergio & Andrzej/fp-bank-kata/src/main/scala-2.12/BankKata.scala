@@ -1,6 +1,6 @@
 object BankKata {
 
-    case class Account(transactions: List[Transaction])
+    case class Account(transactions: List[Transaction] = List())
     case class AccountStatement(balance: Either[Amount, Amount], currentBalance: Amount)
     case class Amount(value: Int)
 
@@ -54,14 +54,10 @@ object BankKata {
     }
 
     def main(args: Array[String]) {
-        def initialAccount() = {
-            Account(List())
-        }
-
         printBankStatement(formatBankStatement(createBankStatement(
                 withdrawal(Amount(30))(
                     deposit(Amount(50))(
-                        initialAccount())))))
+                        Account())))))
     }
 
 }
