@@ -2,7 +2,7 @@ object BankKata {
 
     case class Account(transactions: List[Transaction])
     case class AccountStatement(balance: Either[Amount, Amount], currentBalance: Amount)
-    case class Amount(dolars: Int)
+    case class Amount(value: Int)
 
     sealed trait Transaction
     case class Deposit(amount: Amount) extends Transaction
@@ -26,10 +26,10 @@ object BankKata {
             transaction match {
                 case Deposit(amount) => AccountStatement(
                     Left(amount),
-                    Amount(previousBalance(statements).dolars + amount.dolars))
+                    Amount(previousBalance(statements).value + amount.value))
                 case Withdrawal(amount) => AccountStatement(
                     Right(amount),
-                    Amount(previousBalance(statements).dolars - amount.dolars))
+                    Amount(previousBalance(statements).value - amount.value))
             }
         }
 
@@ -42,8 +42,8 @@ object BankKata {
     def formatStatement(accountStatements: List[AccountStatement]): List[String] = {
         accountStatements.map(accountStatement => {
             accountStatement.balance match {
-                case Left(amount) => s"${amount.dolars} || || ${accountStatement.currentBalance.dolars}"
-                case Right(amount) => s" || ${amount.dolars} || ${accountStatement.currentBalance.dolars}"
+                case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
+                case Right(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
             }
         })
     }
