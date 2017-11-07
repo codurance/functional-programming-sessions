@@ -7,9 +7,9 @@ class ExampleTest extends FlatSpec with Matchers {
             withdrawal(Amount(30))(
                 deposit(Amount(50))(
                     Account(List())))))
+
         statementLines should be(List(
             " || 30 || 20",
-            "50 || || 50"
-        ))
+            "50 || || 50"))
     }
 }
