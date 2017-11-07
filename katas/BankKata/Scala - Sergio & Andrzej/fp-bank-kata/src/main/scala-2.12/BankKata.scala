@@ -39,7 +39,7 @@ object BankKata {
             })
     }
 
-    def formatStatement(accountStatements: List[AccountStatement]): List[String] = {
+    def formatBankStatement(accountStatements: List[AccountStatement]): List[String] = {
         accountStatements.map(accountStatement => {
             accountStatement.balance match {
                 case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
@@ -48,7 +48,7 @@ object BankKata {
         })
     }
 
-    def printStatement(lines: List[String]): Unit = {
+    def printBankStatement(lines: List[String]): Unit = {
         println("date || credit || debit || balance")
         lines.foreach(line => println(line))
     }
@@ -58,7 +58,7 @@ object BankKata {
             Account(List())
         }
 
-        printStatement(formatStatement(createBankStatement(
+        printBankStatement(formatBankStatement(createBankStatement(
                 withdrawal(Amount(30))(
                     deposit(Amount(50))(
                         initialAccount())))))
