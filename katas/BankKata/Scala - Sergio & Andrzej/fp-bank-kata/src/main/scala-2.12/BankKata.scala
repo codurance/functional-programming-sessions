@@ -1,10 +1,13 @@
+import com.sun.javafx.stage.WindowCloseRequestHandler
+
 object BankKata {
 
     case class Account(transactions: List[Transaction] = List())
-    case class AccountStatement(balance: Either[Amount, Amount], currentBalance: Amount)
+    case class AccountStatement(transaction: Transaction, currentBalance: Amount)
     case class Amount(value: Int)
 
     sealed trait Transaction
+    // TODO: Add value function
     case class Deposit(amount: Amount) extends Transaction
     case class Withdrawal(amount: Amount) extends Transaction
 
@@ -25,14 +28,15 @@ object BankKata {
         def createAccountStatement(statements: List[AccountStatement], transaction: Transaction) = {
             transaction match {
                 case Deposit(amount) => AccountStatement(
-                    Left(amount),
+                    Deposit(amount),
                     Amount(previousBalance(statements).value + amount.value))
                 case Withdrawal(amount) => AccountStatement(
-                    Right(amount),
+                    Withdrawal(amount),
                     Amount(previousBalance(statements).value - amount.value))
             }
         }
 
+        // TODO: try scan
         account.transactions
             .foldLeft(List[AccountStatement]())((statements: List[AccountStatement], transaction: Transaction) => {
                 createAccountStatement(statements, transaction) :: statements
@@ -46,9 +50,9 @@ object BankKata {
 
         def statementLines = {
             createBankStatement(account).map(accountStatement => {
-                accountStatement.balance match {
-                    case Left(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
-                    case Right(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
+                accountStatement.transaction match {
+                    case Deposit(amount) => s"${amount.value} || || ${accountStatement.currentBalance.value}"
+                    case Withdrawal(amount) => s" || ${amount.value} || ${accountStatement.currentBalance.value}"
                 }
             })
         }
