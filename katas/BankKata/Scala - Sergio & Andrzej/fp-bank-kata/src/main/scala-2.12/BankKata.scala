@@ -1,7 +1,7 @@
 object BankKata {
 
     case class Account(transactions: List[Transaction])
-    case class AccountStatement(credit: Option[Amount], debit: Option[Amount], balance: Amount)
+    case class AccountStatement(balance: Either[Amount, Amount], currentBalance: Amount)
     case class Amount(dolars: Int)
 
     sealed trait Transaction
@@ -17,20 +17,17 @@ object BankKata {
     }
 
     def createBankStatement(account: Account): List[AccountStatement] = {
-        // TODO: Extract method here
         account.transactions
             .foldLeft(List[AccountStatement]())((statements: List[AccountStatement], transaction: Transaction) => {
                 // TODO: Extract method here
-                val previousBalance: Amount = if (statements.isEmpty) Amount(0) else statements.head.balance
+                val previousBalance: Amount = if (statements.isEmpty) Amount(0) else statements.head.currentBalance
                 // TODO: Extract method here
                 val accountStatement: AccountStatement = transaction match {
                     case Deposit(amount) => AccountStatement(
-                        Some(amount),
-                        None,
+                        Left(amount),
                         Amount(previousBalance.dolars + amount.dolars))
                     case Withdrawal(amount) => AccountStatement(
-                        None,
-                        Some(amount),
+                        Right(amount),
                         Amount(previousBalance.dolars - amount.dolars))
                 }
                 accountStatement :: statements
@@ -39,7 +36,10 @@ object BankKata {
 
     def formatStatement(accountStatements: List[AccountStatement]): List[String] = {
         accountStatements.map(accountStatement => {
-            s"${accountStatement.credit} || ${accountStatement.debit} || ${accountStatement.balance}"
+            accountStatement.balance match {
+                case Left(amount) => s"${amount.dolars} || || ${accountStatement.currentBalance.dolars}"
+                case Right(amount) => s" || ${amount.dolars} || ${accountStatement.currentBalance.dolars}"
+            }
         })
     }
 

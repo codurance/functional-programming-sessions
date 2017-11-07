@@ -8,8 +8,8 @@ class ExampleTest extends FlatSpec with Matchers {
                 deposit(Amount(50))(
                     Account(List())))))
         statementLines should be(List(
-            "None || Some(Amount(30)) || Amount(20)",
-            "Some(Amount(50)) || None || Amount(50)"
+            " || 30 || 20",
+            "50 || || 50"
         ))
     }
 }
