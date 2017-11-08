@@ -1,7 +1,7 @@
 import org.scalatest.{FlatSpec, Matchers}
 import BankKata._
 
-class ExampleTest extends FlatSpec with Matchers {
+class BankKataTest extends FlatSpec with Matchers {
     "statement lines" should "be formatted" in {
         val statementLines = formatBankStatement(
             withdrawal(Amount(30))(
