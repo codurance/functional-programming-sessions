@@ -4,7 +4,6 @@
 module BankAccount where
 
 import           Data.Maybe
-import           Data.String.Interpolate
 
 newtype Amount = Amount { unPositive :: Int } deriving (Num, Eq, Ord)
 newtype RunningBalance = RunningBalance Int deriving (Eq)

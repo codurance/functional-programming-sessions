@@ -67,6 +67,11 @@ spec = do
 statementLines ::  [String]
 statementLines = printStatement . makeStatement . makeAccount' $ [makeWithdraw (-100), makeDeposit 200, makeDeposit 300, makeWithdraw 600]
 
+xxx :: Maybe BankAccount
+--xxx = makeDeposit (100) <*> ((makeDeposit 200) <*>  ((makeWithdraw 300) <*>  pure emptyAccount))
+xxx = pure (\x y z -> x . y . z $ emptyAccount) <*> (makeDeposit (100)) <*> (makeDeposit 200) <*>  (makeWithdraw 300)
+--xxx = pure (.) <*> (makeDeposit (-100)) <*> (makeDeposit 200) <*>  ((makeWithdraw 300) <*>  pure emptyAccount)
+
 main :: IO ()
 main = do
 -- mapM_ print statementLines
