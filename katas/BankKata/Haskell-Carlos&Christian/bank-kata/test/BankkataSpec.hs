@@ -60,13 +60,12 @@ spec = do
         account <- return $ makeAccount $ [makeDeposit' 300, makeDeposit' 200, makeWithdraw' 200, makeWithdraw' 100, makeDeposit' 100]
         statementLines <- return $ printStatement . makeStatement $ account
         statementLines `shouldBe`
-          [" credit | debit | balance",
-           "   100  |       |  300",
-           "        |  100  |  200",
-           "        |  200  |  300",
-           "   200  |       |  500",
-           "   300  |       |  300"
-          ]
+          ["      date | credit | debit | balance",
+           "2017-01-01 | 100    |       |  300",
+           "2017-01-01 |        |  100  |  200",
+           "2017-01-01 |        |  200  |  300",
+           "2017-01-01 | 200    |       |  500",
+           "2017-01-01 | 300    |       |  300"]
 
 aDay :: Day
 aDay = fromGregorian 2017 01 01
@@ -84,5 +83,5 @@ xxx = pure (\x y z -> x . y . z $ emptyAccount) <*> (makeDeposit' (100)) <*> (ma
 
 main :: IO ()
 main = do
- mapM_ print statementLines
---  hspec spec
+-- mapM_ print statementLines
+  hspec spec

@@ -41,10 +41,11 @@ addTransaction transaction account = BankAccount $ transactions account ++ [tran
 
 printStatement ::  Statement -> [String]
 printStatement statement = header ++  fmap toStatementLine statement
-  where header = [" credit | debit | balance"]
-        toStatementLine :: (Transaction, RunningBalance) -> String
-        toStatementLine (deposit@(Deposit _ _),  runningBalance)  = "   " ++ show deposit  ++  "  |  " ++     "   "     ++ "  |  " ++ show runningBalance
-        toStatementLine (withdraw@(Withdraw _ _), runningBalance) = "   " ++     "   "     ++  "  |  " ++ show withdraw ++ "  |  " ++ show runningBalance
+  where
+    header = ["      date | credit | debit | balance"]
+    toStatementLine :: (Transaction, RunningBalance) -> String
+    toStatementLine ((Deposit date amount),  runningBalance)  = show date ++ " | " ++ show amount  ++  "    |  " ++     "   "     ++ "  |  " ++ show runningBalance
+    toStatementLine ((Withdraw date amount), runningBalance)  = show date ++     " |      "     ++ "  |  " ++ show amount  ++  "  |  " ++ show runningBalance
 
 toAmount :: Transaction -> Int
 toAmount (Deposit _ x)  = unPositive x
