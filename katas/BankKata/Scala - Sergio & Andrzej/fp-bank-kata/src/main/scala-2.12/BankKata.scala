@@ -1,15 +1,18 @@
-import com.sun.javafx.stage.WindowCloseRequestHandler
-
 object BankKata {
 
     case class Account(transactions: List[Transaction] = List())
     case class AccountStatement(transaction: Transaction, currentBalance: Amount)
     case class Amount(value: Int)
 
-    sealed trait Transaction
-    // TODO: Add value function
-    case class Deposit(amount: Amount) extends Transaction
-    case class Withdrawal(amount: Amount) extends Transaction
+    sealed trait Transaction {
+       def value(): Int
+    }
+    case class Deposit(amount: Amount) extends Transaction {
+        override def value(): Int = amount.value
+    }
+    case class Withdrawal(amount: Amount) extends Transaction {
+        override def value(): Int = -amount.value
+    }
 
     def deposit(amount: Amount)(account: Account): Account = {
         Account(account.transactions ++ List(Deposit(amount)))
@@ -26,14 +29,9 @@ object BankKata {
         }
 
         def createAccountStatement(statements: List[AccountStatement], transaction: Transaction) = {
-            transaction match {
-                case Deposit(amount) => AccountStatement(
-                    Deposit(amount),
-                    Amount(previousBalance(statements).value + amount.value))
-                case Withdrawal(amount) => AccountStatement(
-                    Withdrawal(amount),
-                    Amount(previousBalance(statements).value - amount.value))
-            }
+            AccountStatement(
+                transaction,
+                Amount(previousBalance(statements).value + transaction.value()))
         }
 
         // TODO: try scan
