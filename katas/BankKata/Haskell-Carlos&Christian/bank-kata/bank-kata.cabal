@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     BankAccount
   build-depends:       base >= 4.7 && < 5
+                     , time
   default-language:    Haskell2010
 
 executable bank-kata
@@ -33,6 +34,7 @@ test-suite bank-kata-test
   main-is:             Spec.hs
   build-depends:       base
                      , bank-kata
+                     , time
                      , hspec
                      , QuickCheck
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
