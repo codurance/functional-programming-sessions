@@ -81,7 +81,15 @@ xxx :: Maybe BankAccount
 xxx = pure (\x y z -> x . y . z $ emptyAccount) <*> (makeDeposit' (100)) <*> (makeDeposit' 200) <*>  (makeWithdraw' 300)
 --xxx = pure (.) <*> (makeDeposit' (-100)) <*> (makeDeposit' 200) <*>  ((makeWithdraw' 300) <*>  pure emptyAccount)
 
+comp :: IO ()
+comp = do
+  time <- utctDay <$> getCurrentTime
+  bankAccount <- return $ makeAccount [makeWithdraw time 100, makeDeposit time (-300)]
+  statement <- return $ printStatement . makeStatement $ bankAccount
+  mapM_ print statement
+
 main :: IO ()
 main = do
+  comp
 -- mapM_ print statementLines
-  hspec spec
+--  hspec spec
