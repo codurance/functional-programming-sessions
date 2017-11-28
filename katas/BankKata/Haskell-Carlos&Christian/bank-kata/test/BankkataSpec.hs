@@ -91,12 +91,6 @@ makeWithdraw' = makeWithdraw aDay
 statementLines ::  [String]
 statementLines = printStatement . makeStatement . makeAccount $ [makeDeposit' 100, makeWithdraw' (200)]
 
-xxx :: Maybe BankAccount
-xxx = do
-  acc <- makeWithdraw' 100 emptyAccount
-  acc2 <- makeDeposit' 200 acc
-  return acc2
-
 composing :: Maybe BankAccount
 composing = makeWithdraw' 100 >=> makeDeposit' 200 >=> makeDeposit' 300 $ emptyAccount
 
