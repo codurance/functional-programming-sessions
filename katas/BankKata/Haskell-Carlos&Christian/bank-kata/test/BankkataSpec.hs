@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# OPTIONS_GHC -Wall -fno-warn-name-shadowing #-}
 
 module BankkataSpec  (main, spec) where
@@ -5,6 +7,7 @@ module BankkataSpec  (main, spec) where
 import           BankAccount
 import           Control.Monad
 import           Data.Time
+import           Debug.Trace
 import           Test.Hspec
 -- Given a client makes a deposit of 1000 on 10-01-2012
 -- And a deposit of 2000 on 13-01-2012
@@ -39,6 +42,7 @@ spec = do
     it "Given a list of transactions with invalid entries can create account discarting invalid transactions" $ do
       makeAccount [makeWithdraw' (-100), makeDeposit' 200, makeDeposit' 300, makeWithdraw' 600] `shouldBe`
         BankAccount [Deposit aDay 200, Deposit aDay 300, Withdraw aDay 600]
+
     it "Given a list of transactions with invalid entries can create account discarting all transactions" $ do
       makeAccount [makeWithdraw' (-100), makeDeposit' 200, makeDeposit' 300, makeWithdraw' 600] `shouldBe`
         BankAccount []
@@ -62,9 +66,20 @@ spec = do
            "2017-01-01 |        |  200  |  300",
            "2017-01-01 | 200    |       |  500",
            "2017-01-01 | 300    |       |  300"]
+    it "works" $ do
+      program <- return $ program (SpyConsole "") (StubCalendar [aDay, anotherDay])
+      console <- program [makeWithdrawFlip 200, makeWithdrawFlip 300]
+      console `shouldBe`
+        [SpyConsole "      date | credit | debit | balance",
+         SpyConsole "2017-01-01 |        |  300  |  -500",
+         SpyConsole "2017-01-01 |        |  200  |  -200"
+        ]
 
 aDay :: Day
 aDay = fromGregorian 2017 01 01
+
+anotherDay :: Day
+anotherDay = fromGregorian 2017 01 02
 
 makeDeposit' :: Int -> BankAccount -> Maybe BankAccount
 makeDeposit' = makeDeposit aDay
@@ -73,30 +88,64 @@ makeWithdraw' = makeWithdraw aDay
 
 statementLines ::  [String]
 statementLines = printStatement . makeStatement . makeAccount $ [makeDeposit' 100, makeWithdraw' (200)]
---statementLines = printStatement . makeStatement . makeAccount' $ [makeWithdraw' (-100), makeDeposit' 200, makeDeposit' 300, makeWithdraw' 600]
 
---xxx :: Maybe BankAccount
---xxx = makeDeposit' (100) <*> ((makeDeposit' 200) <*>  ((makeWithdraw' 300) <*>  pure emptyAccount))
--- xxx = pure (\x y z -> x . y . z $ emptyAccount) <*> (makeDeposit' (100)) <*> (makeDeposit' 200) <*>  (makeWithdraw' 300)
---xxx = pure (.) <*> (makeDeposit' (-100)) <*> (makeDeposit' 200) <*>  ((makeWithdraw' 300) <*>  pure emptyAccount)
 xxx :: Maybe BankAccount
 xxx = do
   acc <- makeWithdraw' 100 emptyAccount
   acc2 <- makeDeposit' 200 acc
   return acc2
 
-yyy :: Maybe BankAccount
-yyy = makeWithdraw' 100 >=> makeDeposit' 200 >=> makeDeposit' 300 $ emptyAccount
+composing :: Maybe BankAccount
+composing = makeWithdraw' 100 >=> makeDeposit' 200 >=> makeDeposit' 300 $ emptyAccount
 
-comp :: IO ()
-comp = do
+aHardcodedProgram :: IO ()
+aHardcodedProgram = do
   time <- utctDay <$> getCurrentTime
   bankAccount <- return $ makeAccount [makeWithdraw time 100, makeDeposit time (300)]
   statement <- return $ printStatement . makeStatement $ bankAccount
   mapM_ print statement
 
+makeWithdrawFlip :: Int -> Day -> BankAccount -> Maybe BankAccount
+makeWithdrawFlip = flip makeWithdraw
+
+class Calendar a where
+  day :: a -> IO Day
+
+data RealCalendar = RealCalendar
+data StubCalendar = StubCalendar [Day]
+
+instance Calendar RealCalendar where
+  day _ = utctDay <$> getCurrentTime
+
+instance Calendar StubCalendar where
+  day (StubCalendar days) = return . head $ days
+
+class Console a where
+  print' :: a -> String -> IO a
+
+data RealConsole = RealConsole deriving Show
+data SpyConsole = SpyConsole String deriving (Show, Eq)
+
+instance Console RealConsole where
+  print' x text = do
+    print text
+    return x
+
+instance Console SpyConsole where
+  print' _ line = return $ SpyConsole $ line
+
+program :: (Console con , Calendar cal) => con -> cal -> [Day -> BankAccount -> Maybe BankAccount] -> IO [con]
+program console calendar transactions = do
+--  day <- day calendar
+--  bankAccount <- return $ makeAccount (transactions <*> pure day)
+  xs <- mapM (trace "1" (\transaction -> transaction <$> (trace "2" day calendar))) transactions
+  bankAccount <- return $ makeAccount xs
+  statement <- return $ printStatement . makeStatement $ bankAccount
+  mapM (print' console) statement
+
 main :: IO ()
 main = do
-  comp
+--  comp
 -- mapM_ print statementLines
---  hspec spec
+  _ <- program RealConsole RealCalendar [makeWithdrawFlip 200, makeWithdrawFlip 300]
+  hspec spec
