@@ -6,6 +6,7 @@ module BankkataSpec  (main, spec) where
 
 import           BankAccount
 import           Control.Monad
+import           Data.IORef
 import           Data.Time
 import           Debug.Trace
 import           Test.Hspec
@@ -67,11 +68,12 @@ spec = do
            "2017-01-01 | 200    |       |  500",
            "2017-01-01 | 300    |       |  300"]
     it "works" $ do
-      program <- return $ program (SpyConsole "") (StubCalendar [aDay, anotherDay])
+      days <- newIORef [aDay, aDay, anotherDay]
+      program <- return $ program (StubCalendar days)
       console <- program [makeWithdrawFlip 200, makeWithdrawFlip 300]
       console `shouldBe`
         [SpyConsole "      date | credit | debit | balance",
-         SpyConsole "2017-01-01 |        |  300  |  -500",
+         SpyConsole "2017-01-02 |        |  300  |  -500",
          SpyConsole "2017-01-01 |        |  200  |  -200"
         ]
 
@@ -112,40 +114,43 @@ class Calendar a where
   day :: a -> IO Day
 
 data RealCalendar = RealCalendar
-data StubCalendar = StubCalendar [Day]
+data StubCalendar = StubCalendar (IORef [Day])
 
 instance Calendar RealCalendar where
   day _ = utctDay <$> getCurrentTime
 
 instance Calendar StubCalendar where
-  day (StubCalendar days) = return . head $ days
+  day (StubCalendar days) = do
+    modifyIORef days tail
+    head <$> readIORef days
 
 class Console a where
-  print' :: a -> String -> IO a
+  print' :: String -> IO a
 
 data RealConsole = RealConsole deriving Show
 data SpyConsole = SpyConsole String deriving (Show, Eq)
 
 instance Console RealConsole where
-  print' x text = do
+  print' text = do
     print text
-    return x
+    return RealConsole
 
 instance Console SpyConsole where
-  print' _ line = return $ SpyConsole $ line
+  print' line = return $ SpyConsole $ line
 
-program :: (Console con , Calendar cal) => con -> cal -> [Day -> BankAccount -> Maybe BankAccount] -> IO [con]
-program console calendar transactions = do
---  day <- day calendar
---  bankAccount <- return $ makeAccount (transactions <*> pure day)
-  xs <- mapM (trace "1" (\transaction -> transaction <$> (trace "2" day calendar))) transactions
+program :: (Console con , Calendar cal) => cal -> [Day -> BankAccount -> Maybe BankAccount] -> IO [con]
+program calendar transactions = do
+--  day <- trace "1" (fst <$> day calendar)
+--  bankAccount <- return $ makeAccount (transactions <*> (pure day))
+  xs <- mapM (\transaction -> transaction <$> day calendar) transactions
   bankAccount <- return $ makeAccount xs
   statement <- return $ printStatement . makeStatement $ bankAccount
-  mapM (print' console) statement
+  mapM print' statement
 
 main :: IO ()
 main = do
 --  comp
 -- mapM_ print statementLines
-  _ <- program RealConsole RealCalendar [makeWithdrawFlip 200, makeWithdrawFlip 300]
+  days <- newIORef [aDay, aDay, anotherDay]
+  _ <- program (StubCalendar days) [makeWithdrawFlip 200, makeWithdrawFlip 300] :: IO [RealConsole]
   hspec spec
