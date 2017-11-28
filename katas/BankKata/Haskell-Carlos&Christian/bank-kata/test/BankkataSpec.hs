@@ -20,6 +20,7 @@ import           Test.Hspec
 -- 13/01/2012 || 2000.00 || || 3000.00
 -- 10/01/2012 || 1000.00 || || 1000.00
 
+-- TODO: Consider Trnasactions as a functions
 -- TODO: Lenses to avoid pattern matching in multiple places
 -- TODO: Add Logger of transactions
 -- TODO: Add storage
@@ -68,7 +69,7 @@ spec = do
            "2017-01-01 | 200    |       |  500",
            "2017-01-01 | 300    |       |  300"]
     it "works" $ do
-      days <- newIORef [aDay, aDay, anotherDay]
+      days <- newIORef [aDay, anotherDay]
       program <- return $ program (StubCalendar days)
       console <- program [makeWithdrawFlip 200, makeWithdrawFlip 300]
       console `shouldBe`
@@ -136,7 +137,8 @@ program :: (Console con , Calendar cal) => cal -> [Day -> BankAccount -> Maybe B
 program calendar transactions = do
 --  day <- trace "1" (fst <$> day calendar)
 --  bankAccount <- return $ makeAccount (transactions <*> (pure day))
-  completedTransactions <- mapM (\transaction -> transaction <$> day calendar) transactions
+  day <- day calendar
+  completedTransactions <- mapM (\transaction -> transaction <$> return day) transactions
   statement <- return $ printStatement . makeStatement . makeAccount $ completedTransactions
   mapM print' statement
 
