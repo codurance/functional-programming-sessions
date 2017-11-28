@@ -142,8 +142,6 @@ program calendar transactions = do
 
 main :: IO ()
 main = do
---  comp
--- mapM_ print statementLines
-  days <- newIORef [aDay, aDay, anotherDay]
+  days <- newIORef [aDay, anotherDay]
   _ <- program (StubCalendar days) [makeWithdrawFlip 200, makeWithdrawFlip 300] :: IO [RealConsole]
   hspec spec
