@@ -136,9 +136,8 @@ program :: (Console con , Calendar cal) => cal -> [Day -> BankAccount -> Maybe B
 program calendar transactions = do
 --  day <- trace "1" (fst <$> day calendar)
 --  bankAccount <- return $ makeAccount (transactions <*> (pure day))
-  xs <- mapM (\transaction -> transaction <$> day calendar) transactions
-  bankAccount <- return $ makeAccount xs
-  statement <- return $ printStatement . makeStatement $ bankAccount
+  completedTransactions <- mapM (\transaction -> transaction <$> day calendar) transactions
+  statement <- return $ printStatement . makeStatement . makeAccount $ completedTransactions
   mapM print' statement
 
 main :: IO ()
