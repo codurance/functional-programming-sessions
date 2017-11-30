@@ -10,12 +10,12 @@ import           Control.Monad
 import           Data.Maybe
 import           Data.Time
 
-newtype Amount = Amount { unPositive :: Int } deriving (Num, Eq, Ord)
+newtype Amount = Amount { unPositive :: Int } deriving (Show, Num, Eq, Ord)
 newtype RunningBalance = RunningBalance Int deriving (Eq)
 
 data Transaction =
   Deposit {_day::Day, _amount::Amount} |
-  Withdraw {_day::Day, _amount::Amount} deriving (Eq, Ord)
+  Withdraw {_day::Day, _amount::Amount} deriving (Show, Eq, Ord)
 
 makeLenses ''Transaction
 
@@ -25,13 +25,6 @@ type Statement = [(Transaction, RunningBalance)]
 
 instance Show RunningBalance where
   show (RunningBalance x) = show x
-
-instance Show Transaction where
-  show (Deposit _ x)  = show x
-  show (Withdraw _ x) = show x
-
-instance Show Amount where
-  show (Amount x) = show x
 
 toPositive :: Int -> Maybe Amount
 toPositive x
@@ -61,7 +54,7 @@ printStatement statement = header ++  fmap toStatementLine statement
     toStatementLine (t@(Deposit {}),  runningBalance)  = showDay t ++ " | " ++ showAmount t  ++  "    |  " ++     "   "     ++ "  |  " ++ show runningBalance
     toStatementLine (t@(Withdraw {}), runningBalance)  = showDay t ++     " |      "     ++ "  |  " ++  showAmount t  ++  "  |  " ++ show runningBalance
     showDay t = show $ view day t
-    showAmount t = show $ view amount t
+    showAmount t = show . unPositive $ view amount t
 
 toAmount :: Transaction -> Int
 toAmount (t@Deposit {})  = unPositive $ view amount t
