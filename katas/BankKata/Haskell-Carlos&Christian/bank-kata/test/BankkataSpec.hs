@@ -10,6 +10,7 @@ import           Data.IORef
 import           Data.Time
 import           Debug.Trace
 import           Test.Hspec
+
 -- Given a client makes a deposit of 1000 on 10-01-2012
 -- And a deposit of 2000 on 13-01-2012
 -- And a withdrawal of 500 on 14-01-2012
@@ -106,16 +107,16 @@ makeWithdrawFlip :: Int -> Day -> BankAccount -> Maybe BankAccount
 makeWithdrawFlip = flip makeWithdraw
 
 class Calendar a where
-  day :: a -> IO Day
+  day' :: a -> IO Day
 
 data RealCalendar = RealCalendar
 data StubCalendar = StubCalendar (IORef [Day])
 
 instance Calendar RealCalendar where
-  day _ = utctDay <$> getCurrentTime
+  day' _ = utctDay <$> getCurrentTime
 
 instance Calendar StubCalendar where
-  day (StubCalendar days) = do
+  day' (StubCalendar days) = do
     modifyIORef days tail
     head <$> readIORef days
 
@@ -137,7 +138,7 @@ program :: (Console con , Calendar cal) => cal -> [Day -> BankAccount -> Maybe B
 program calendar transactions = do
 --  day <- trace "1" (fst <$> day calendar)
 --  bankAccount <- return $ makeAccount (transactions <*> (pure day))
-  day <- day calendar
+  day <- day' calendar
   completedTransactions <- mapM (\transaction -> transaction <$> return day) transactions
   statement <- return $ printStatement . makeStatement . makeAccount $ completedTransactions
   mapM print' statement

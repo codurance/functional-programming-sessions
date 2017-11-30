@@ -1,9 +1,11 @@
 {-# OPTIONS_GHC -Wall -fno-warn-name-shadowing #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE QuasiQuotes                #-}
+{-# LANGUAGE TemplateHaskell            #-}
 
 module BankAccount where
 
+import           Control.Lens
 import           Control.Monad
 import           Data.Maybe
 import           Data.Time
@@ -11,7 +13,11 @@ import           Data.Time
 newtype Amount = Amount { unPositive :: Int } deriving (Num, Eq, Ord)
 newtype RunningBalance = RunningBalance Int deriving (Eq)
 
-data Transaction = Deposit Day Amount | Withdraw Day Amount deriving (Eq, Ord)
+data Transaction =
+  Deposit {_day::Day, _amount::Amount} |
+  Withdraw {_day::Day, _amount::Amount} deriving (Eq, Ord)
+
+makeLenses ''Transaction
 
 newtype BankAccount = BankAccount { transactions  :: [Transaction] } deriving (Show, Eq)
 
@@ -52,12 +58,14 @@ printStatement statement = header ++  fmap toStatementLine statement
   where
     header = ["      date | credit | debit | balance"]
     toStatementLine :: (Transaction, RunningBalance) -> String
-    toStatementLine ((Deposit date amount),  runningBalance)  = show date ++ " | " ++ show amount  ++  "    |  " ++     "   "     ++ "  |  " ++ show runningBalance
-    toStatementLine ((Withdraw date amount), runningBalance)  = show date ++     " |      "     ++ "  |  " ++ show amount  ++  "  |  " ++ show runningBalance
+    toStatementLine (t@(Deposit {}),  runningBalance)  = showDay t ++ " | " ++ showAmount t  ++  "    |  " ++     "   "     ++ "  |  " ++ show runningBalance
+    toStatementLine (t@(Withdraw {}), runningBalance)  = showDay t ++     " |      "     ++ "  |  " ++  showAmount t  ++  "  |  " ++ show runningBalance
+    showDay t = show $ view day t
+    showAmount t = show $ view amount t
 
 toAmount :: Transaction -> Int
-toAmount (Deposit _ x)  = unPositive x
-toAmount (Withdraw _ x) = unPositive $ -x
+toAmount (t@Deposit {})  = unPositive $ view amount t
+toAmount (t@Withdraw {}) = negate . unPositive $ view amount t
 
 makeStatement :: BankAccount -> Statement
 makeStatement account = zip (reverse . transactions $ account) (reverse balances)
