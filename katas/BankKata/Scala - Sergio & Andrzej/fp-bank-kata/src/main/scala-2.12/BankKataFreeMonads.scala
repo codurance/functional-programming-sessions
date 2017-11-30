@@ -37,22 +37,21 @@ object BankKataFreeMonads {
                 ()
             }
             case PrintBankStatement() => {
-                val runnningBalances = transactions
+                val statementLines = transactions
                         .scan(0)(_ + _)
-                val transactionsWithBalances = transactions
-                        .zip(runnningBalances.drop(1))
+                        .drop(1)
+                        .zip(transactions)
                         .reverse
-
-                val lines = transactionsWithBalances
                         .map(t => buildStatementLine(t._1, t._2))
                         .map(formatStatementLine)
 
                 println("date || credit || debit || balance")
-                lines.foreach(println)
+                statementLines.foreach(println)
+                ()
             }
         }
 
-        private def buildStatementLine(amount: Int, balance: Int): StatementLine = {
+        private def buildStatementLine(balance: Int, amount: Int): StatementLine = {
             val credit = if (amount > 0) amount else 0
             val debit = if (amount < 0) amount else 0
 
