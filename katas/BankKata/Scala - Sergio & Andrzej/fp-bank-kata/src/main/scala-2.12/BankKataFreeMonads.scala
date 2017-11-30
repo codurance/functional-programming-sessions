@@ -23,8 +23,6 @@ object BankKataFreeMonads {
     } yield ()
 
     def transactionInterpreter = new (TransactionOp ~> Id) {
-        case class StatementLine(credit: Int, debit: Int, balance: Int)
-
         val transactions: mutable.ListBuffer[Int] = mutable.ListBuffer[Int]()
 
         override def apply[A](fa: TransactionOp[A]) = fa match {
@@ -42,8 +40,7 @@ object BankKataFreeMonads {
                         .drop(1)
                         .zip(transactions)
                         .reverse
-                        .map(t => buildStatementLine(t._1, t._2))
-                        .map(formatStatementLine)
+                        .map(t => formatStatementLine(t._1, t._2))
 
                 println("date || credit || debit || balance")
                 statementLines.foreach(println)
@@ -51,18 +48,11 @@ object BankKataFreeMonads {
             }
         }
 
-        private def buildStatementLine(balance: Int, amount: Int): StatementLine = {
-            val credit = if (amount > 0) amount else 0
-            val debit = if (amount < 0) amount else 0
+        private def formatStatementLine(balance: Int, amount: Int): String = {
+            val credit = if (amount > 0) amount else ""
+            val debit = if (amount < 0) amount else ""
 
-            StatementLine(credit, debit, balance)
-        }
-
-        private def formatStatementLine(statementLine: StatementLine): String = {
-            val credit = if (statementLine.credit == 0) "" else statementLine.credit
-            val debit = if (statementLine.debit == 0) "" else statementLine.debit
-
-            s"$credit || $debit || ${statementLine.balance}"
+            s"$credit || $debit || $balance"
         }
 
     }
